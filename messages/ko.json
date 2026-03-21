@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "title": "어디로 갈지 모르겠다고?",
+    "subtitle": "도깨비한테 맡겨봐.",
+    "tagline": "한국 여행의 장난꾸러기 가이드"
+  },
+  "location": {
+    "sectionLabel": "지금 어디에 있어?",
+    "useMyLocation": "내 위치 사용",
+    "orPickCity": "또는 도시를 선택하세요",
+    "detecting": "감지 중..."
+  },
+  "mode": {
+    "sectionLabel": "뭐가 끌려?",
+    "category": {
+      "label": "카테고리 드로우",
+      "description": "먹을래, 볼래, 쇼핑할래?"
+    },
+    "mix": {
+      "label": "믹스 드로우",
+      "description": "전부 섞어 — 도깨비가 골라줌"
+    },
+    "course": {
+      "label": "하루 코스",
+      "description": "카드 4장 — 아침부터 저녁까지",
+      "badge": "준비 중"
+    }
+  },
+  "draw": {
+    "pickDeck": "덱을 골라봐",
+    "pickDeckSub": "오늘 뭐가 땡겨?",
+    "shuffleButton": "이 덱 셔플하기 🃏",
+    "shufflingTitle": "카드 섞는 중...",
+    "shufflingSub": "도깨비가 너의 운명을 장난치는 중",
+    "resultTitle": "도깨비가 정했다!",
+    "resultSub": "반납 불가. (한 번은 봐줄게.)"
+  },
+  "actions": {
+    "getDirections": "구글맵에서 길찾기",
+    "drawAgain": "다시 뽑기 🔀",
+    "share": "공유",
+    "shuffleAndDraw": "셔플 & 뽑기 🃏",
+    "viewDetails": "상세 보기"
+  },
+  "empty": "도깨비도 잠깐 쉬어야 해. 다른 도시를 골라봐!",
+  "footer": "계획? 도깨비는 그런 거 모름.",
+  "categories": {
+    "FOOD": {
+      "label": "맛집 & 음식",
+      "description": "BBQ, 길거리 음식, 카페..."
+    },
+    "ATTRACTION": {
+      "label": "관광지",
+      "description": "사찰, 공원, 뷰 맛집..."
+    },
+    "SHOPPING": {
+      "label": "쇼핑 & 시장",
+      "description": "전통시장, 쇼핑몰..."
+    }
+  },
+  "cities": {
+    "SEOUL": "서울",
+    "BUSAN": "부산",
+    "JEJU": "제주"
+  },
+  "placeDetails": {
+    "hours": "영업시간",
+    "address": "주소",
+    "nearestStation": "가까운 역",
+    "budget": "예산",
+    "closedDays": "({days} 휴무)",
+    "walkMinutes": "— 도보 {minutes}분",
+    "budgetRange": "{min} - {max} 원/인",
+    "location": "위치"
+  },
+  "dokkaebiTip": "도깨비 팁"
+}

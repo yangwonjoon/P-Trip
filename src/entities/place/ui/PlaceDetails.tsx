@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Clock, MapPin, Train, Wallet } from "lucide-react";
 import type { Place } from "../model/types";
 
@@ -6,33 +7,38 @@ interface PlaceDetailsProps {
 }
 
 export function PlaceDetails({ place }: PlaceDetailsProps) {
+  const t = useTranslations("placeDetails");
+
   const items = [
     {
       icon: Clock,
-      label: "Hours",
+      label: t("hours"),
       value: place.operating_hours,
-      sub: place.closed_days ? `(closed ${place.closed_days})` : undefined,
+      sub: place.closed_days ? t("closedDays", { days: place.closed_days }) : undefined,
     },
     {
       icon: MapPin,
-      label: "Address",
+      label: t("address"),
       value: place.address_en,
     },
     place.nearest_station
       ? {
           icon: Train,
-          label: "Nearest station",
+          label: t("nearestStation"),
           value: place.nearest_station,
           sub: place.walk_minutes
-            ? `— ${place.walk_minutes} min walk`
+            ? t("walkMinutes", { minutes: place.walk_minutes })
             : undefined,
         }
       : null,
     place.budget_min
       ? {
           icon: Wallet,
-          label: "Budget",
-          value: `${place.budget_min.toLocaleString()} - ${(place.budget_max ?? place.budget_min).toLocaleString()} KRW/person`,
+          label: t("budget"),
+          value: t("budgetRange", {
+            min: place.budget_min.toLocaleString(),
+            max: (place.budget_max ?? place.budget_min).toLocaleString(),
+          }),
         }
       : null,
   ].filter(Boolean);
@@ -52,10 +58,7 @@ export function PlaceDetails({ place }: PlaceDetailsProps) {
               <p className="text-sm font-medium mt-0.5">
                 {item.value}
                 {item.sub && (
-                  <span className="text-muted-foreground font-normal">
-                    {" "}
-                    {item.sub}
-                  </span>
+                  <span className="text-muted-foreground font-normal"> {item.sub}</span>
                 )}
               </p>
             </div>

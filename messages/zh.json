@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "title": "不知道去哪儿？",
+    "subtitle": "让Dokkaebi来决定吧。",
+    "tagline": "你的韩国旅行捣蛋鬼向导"
+  },
+  "location": {
+    "sectionLabel": "你在哪里？",
+    "useMyLocation": "使用我的位置",
+    "orPickCity": "或选择一个城市",
+    "detecting": "定位中..."
+  },
+  "mode": {
+    "sectionLabel": "选个风格",
+    "category": {
+      "label": "分类抽卡",
+      "description": "美食、景点还是购物？"
+    },
+    "mix": {
+      "label": "混合抽卡",
+      "description": "全部打乱 — Dokkaebi帮你选"
+    },
+    "course": {
+      "label": "一日行程",
+      "description": "4张卡 — 从早到晚",
+      "badge": "即将推出"
+    }
+  },
+  "draw": {
+    "pickDeck": "选一副牌",
+    "pickDeckSub": "今天想玩什么？",
+    "shuffleButton": "洗牌 🃏",
+    "shufflingTitle": "正在洗牌...",
+    "shufflingSub": "Dokkaebi正在摆弄你的命运",
+    "resultTitle": "Dokkaebi已经决定了！",
+    "resultSub": "不许退货。（好吧，一次机会。）"
+  },
+  "actions": {
+    "getDirections": "在谷歌地图上导航",
+    "drawAgain": "再抽一次 🔀",
+    "share": "分享",
+    "shuffleAndDraw": "洗牌 & 抽卡 🃏",
+    "viewDetails": "查看详情"
+  },
+  "empty": "Dokkaebi也需要休息一下。试试其他城市吧！",
+  "footer": "计划？Dokkaebi不认识这个词。",
+  "categories": {
+    "FOOD": {
+      "label": "美食 & 餐厅",
+      "description": "BBQ、街头小吃、咖啡厅..."
+    },
+    "ATTRACTION": {
+      "label": "景点",
+      "description": "寺庙、公园、美景..."
+    },
+    "SHOPPING": {
+      "label": "购物 & 市场",
+      "description": "传统市场、商场..."
+    }
+  },
+  "cities": {
+    "SEOUL": "首尔",
+    "BUSAN": "釜山",
+    "JEJU": "济州"
+  },
+  "placeDetails": {
+    "hours": "营业时间",
+    "address": "地址",
+    "nearestStation": "最近车站",
+    "budget": "预算",
+    "closedDays": "({days}休息)",
+    "walkMinutes": "— 步行{minutes}分钟",
+    "budgetRange": "{min} - {max} 韩元/人",
+    "location": "位置"
+  },
+  "dokkaebiTip": "Dokkaebi小贴士"
+}

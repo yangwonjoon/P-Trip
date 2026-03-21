@@ -82,10 +82,22 @@ API 연결 후 Supabase 쿼리로 대체 예정. 목데이터 참조 위치:
 - `widgets/draw-controller/model/useDrawState.ts` — 랜덤 장소 선택
 - `app/result/[id]/page.tsx` — ID로 장소 조회
 
-### 다국어 지원 (예정)
+### 다국어 (i18n) — next-intl
 
-- **현재**: UI 텍스트는 `src/shared/config/copy.ts`에 영어 하드코딩
-- **계획**: `next-intl` 도입 → `messages/{locale}.json`으로 전환, `[locale]` 라우팅 추가
+- **라이브러리**: `next-intl` — Next.js App Router 네이티브 지원
+- **지원 언어**: en (기본), ko, ja, zh
+- **라우팅**: URL 기반 (`/en/draw`, `/ko/draw`). middleware가 브라우저 언어 감지 후 리다이렉트
+- **번역 파일**: `messages/{locale}.json` — 모든 UI 텍스트 관리
+- **컴포넌트 사용**:
+  - 클라이언트 컴포넌트: `useTranslations()` 훅
+  - 서버 컴포넌트: `getTranslations()` async 함수
+- **구조**:
+  - `src/i18n/routing.ts` — 로케일 목록, 기본 로케일 정의
+  - `src/i18n/request.ts` — 서버 컴포넌트용 메시지 로딩
+  - `src/i18n/navigation.ts` — 로케일 aware Link, useRouter 등
+  - `src/middleware.ts` — 로케일 감지 + 리다이렉트
+- **categories/cities**: label/description을 메시지 파일에서 관리, config에는 key/emoji/color만 유지
+- **기존 `copy.ts` 삭제**: 모든 텍스트가 `messages/*.json`으로 이관됨
 - **장소 데이터 다국어**: API 연결 후 별도 진행 (DB 스키마 확장 필요)
 
 ---
@@ -112,4 +124,4 @@ API 연결 후 Supabase 쿼리로 대체 예정. 목데이터 참조 위치:
 
 ---
 
-*마지막 업데이트: 2026-03-21 (세션 #4)*
+*마지막 업데이트: 2026-03-21 (세션 #4 — i18n 추가)*

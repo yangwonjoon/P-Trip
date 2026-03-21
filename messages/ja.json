@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "title": "どこに行くか迷ってる？",
+    "subtitle": "トッケビに決めてもらおう。",
+    "tagline": "韓国旅行のいたずらガイド"
+  },
+  "location": {
+    "sectionLabel": "今どこにいる？",
+    "useMyLocation": "現在地を使う",
+    "orPickCity": "または都市を選んでね",
+    "detecting": "検出中..."
+  },
+  "mode": {
+    "sectionLabel": "気分はどれ？",
+    "category": {
+      "label": "カテゴリードロー",
+      "description": "グルメ、観光、ショッピングから選ぼう"
+    },
+    "mix": {
+      "label": "ミックスドロー",
+      "description": "全部シャッフル — トッケビが選ぶよ"
+    },
+    "course": {
+      "label": "1日コース",
+      "description": "カード4枚 — 朝から夜まで",
+      "badge": "準備中"
+    }
+  },
+  "draw": {
+    "pickDeck": "デッキを選んで",
+    "pickDeckSub": "今日の気分は？",
+    "shuffleButton": "このデッキをシャッフル 🃏",
+    "shufflingTitle": "カードをシャッフル中...",
+    "shufflingSub": "トッケビが君の運命をいじってるよ",
+    "resultTitle": "トッケビのお告げ！",
+    "resultSub": "返品不可。（1回だけOK。）"
+  },
+  "actions": {
+    "getDirections": "Googleマップで道案内",
+    "drawAgain": "もう一回引く 🔀",
+    "share": "シェア",
+    "shuffleAndDraw": "シャッフル＆ドロー 🃏",
+    "viewDetails": "詳細を見る"
+  },
+  "empty": "トッケビもちょっと休憩。他の都市を試してみて！",
+  "footer": "計画？トッケビはそんな言葉知らない。",
+  "categories": {
+    "FOOD": {
+      "label": "グルメ",
+      "description": "BBQ、屋台、カフェ..."
+    },
+    "ATTRACTION": {
+      "label": "観光スポット",
+      "description": "お寺、公園、絶景..."
+    },
+    "SHOPPING": {
+      "label": "ショッピング",
+      "description": "伝統市場、モール..."
+    }
+  },
+  "cities": {
+    "SEOUL": "ソウル",
+    "BUSAN": "釜山",
+    "JEJU": "済州"
+  },
+  "placeDetails": {
+    "hours": "営業時間",
+    "address": "住所",
+    "nearestStation": "最寄り駅",
+    "budget": "予算",
+    "closedDays": "({days}休み)",
+    "walkMinutes": "— 徒歩{minutes}分",
+    "budgetRange": "{min} - {max} ウォン/人",
+    "location": "場所"
+  },
+  "dokkaebiTip": "トッケビのアドバイス"
+}

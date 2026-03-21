@@ -1,7 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChevronRight } from "lucide-react";
-import { COPY } from "@/shared/config";
 import type { DrawMode } from "@/features/draw-card";
 import { cn } from "@/shared/lib";
 
@@ -13,38 +13,20 @@ interface ModeSelectorProps {
 const MODES: {
   key: DrawMode;
   emoji: string;
-  label: string;
-  description: string;
-  badge?: string;
   disabled?: boolean;
 }[] = [
-  {
-    key: "category",
-    emoji: "🍲",
-    label: COPY.mode.category.label,
-    description: COPY.mode.category.description,
-  },
-  {
-    key: "mix",
-    emoji: "🔀",
-    label: COPY.mode.mix.label,
-    description: COPY.mode.mix.description,
-  },
-  {
-    key: "course",
-    emoji: "🌍",
-    label: COPY.mode.course.label,
-    description: COPY.mode.course.description,
-    badge: COPY.mode.course.badge,
-    disabled: true,
-  },
+  { key: "category", emoji: "🍲" },
+  { key: "mix", emoji: "🔀" },
+  { key: "course", emoji: "🌍", disabled: true },
 ];
 
 export function ModeSelector({ selectedMode, onSelectMode }: ModeSelectorProps) {
+  const t = useTranslations();
+
   return (
     <section className="px-6 pb-8">
       <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
-        {COPY.mode.sectionLabel}
+        {t("mode.sectionLabel")}
       </p>
 
       <div className="flex flex-col gap-3">
@@ -66,15 +48,17 @@ export function ModeSelector({ selectedMode, onSelectMode }: ModeSelectorProps) 
               <span className="text-2xl">{mode.emoji}</span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm">{mode.label}</span>
-                  {mode.badge && (
+                  <span className="font-semibold text-sm">
+                    {t(`mode.${mode.key}.label`)}
+                  </span>
+                  {mode.disabled && (
                     <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
-                      {mode.badge}
+                      {t("mode.course.badge")}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {mode.description}
+                  {t(`mode.${mode.key}.description`)}
                 </p>
               </div>
               {!mode.disabled && (

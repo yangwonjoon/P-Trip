@@ -139,11 +139,11 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 참고용으로만 기록. MVP 완료 후 우선순위 재정리.
 
-- [ ] 다국어 지원 (i18n) — ko, en, ja, zh
-  - [ ] next-intl 도입 + `[locale]` 라우팅
-  - [ ] UI 텍스트 번역 (COPY → messages/*.json)
+- [x] 다국어 지원 (i18n) — ko, en, ja, zh (UI 텍스트)
+  - [x] next-intl 도입 + `[locale]` 라우팅
+  - [x] UI 텍스트 번역 (COPY → messages/*.json)
+  - [x] Header에 언어 선택 UI 추가
   - [ ] 장소 데이터 다국어 (description, dokkaebi_tip 등) — API 연결 후 진행
-  - [ ] Header에 언어 선택 UI 추가
 - [ ] 믹스 드로우 모드
 - [ ] 하루 코스 생성기 (`/course`) + Google Maps JavaScript API
 - [ ] 소셜 공유 (OG 메타 + 공유 버튼)

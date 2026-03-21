@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { ArrowLeft, Globe } from "lucide-react";
+import { Link, useRouter, usePathname } from "@/i18n/navigation";
+import { routing, type Locale } from "@/i18n/routing";
+import { useLocale } from "next-intl";
 import { cn } from "@/shared/lib";
 
 interface HeaderProps {
@@ -10,8 +12,22 @@ interface HeaderProps {
   city?: string;
 }
 
+const LOCALE_LABELS: Record<Locale, string> = {
+  en: "EN",
+  ko: "한",
+  ja: "日",
+  zh: "中",
+};
+
 export function Header({ showBack = false, city }: HeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale() as Locale;
+  const t = useTranslations();
+
+  const handleLocaleChange = (newLocale: Locale) => {
+    router.replace(pathname, { locale: newLocale });
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -37,18 +53,34 @@ export function Header({ showBack = false, city }: HeaderProps) {
           <span className="font-semibold text-sm">P&apos;s Trip</span>
         </Link>
 
-        {/* Right: city badge */}
-        <div className="w-auto">
+        {/* Right: city badge + language selector */}
+        <div className="flex items-center gap-2">
           {city && (
-            <span
-              className={cn(
-                "text-xs px-2.5 py-1 rounded-full",
-                "bg-muted text-muted-foreground"
-              )}
-            >
+            <span className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
               {city}
             </span>
           )}
+
+          {/* 언어 선택 */}
+          <div className="relative group">
+            <button className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-muted transition-colors">
+              <Globe className="w-4 h-4" />
+            </button>
+            <div className="absolute right-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              {routing.locales.map((loc) => (
+                <button
+                  key={loc}
+                  onClick={() => handleLocaleChange(loc)}
+                  className={cn(
+                    "block w-full px-4 py-2 text-sm text-left hover:bg-muted transition-colors first:rounded-t-lg last:rounded-b-lg",
+                    locale === loc && "font-bold text-[var(--pt-purple)]"
+                  )}
+                >
+                  {LOCALE_LABELS[loc]}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </header>

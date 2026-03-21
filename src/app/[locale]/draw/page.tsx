@@ -1,15 +1,16 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 import { Header } from "@/widgets/header";
 import { DrawController } from "@/widgets/draw-controller";
-import { CITIES } from "@/shared/config";
 
 function DrawContent() {
   const searchParams = useSearchParams();
+  const t = useTranslations();
   const cityKey = searchParams.get("city") || "SEOUL";
-  const cityLabel = CITIES.find((c) => c.key === cityKey)?.label ?? "Seoul";
+  const cityLabel = t(`cities.${cityKey}`);
 
   return (
     <>

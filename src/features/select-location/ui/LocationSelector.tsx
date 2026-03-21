@@ -1,7 +1,8 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { MapPin } from "lucide-react";
-import { COPY, CITIES } from "@/shared/config";
+import { CITIES } from "@/shared/config";
 import type { City } from "@/shared/config";
 import { cn } from "@/shared/lib";
 
@@ -18,14 +19,14 @@ export function LocationSelector({
   onDetectLocation,
   isDetecting,
 }: LocationSelectorProps) {
+  const t = useTranslations();
+
   return (
     <section className="px-6 py-8">
-      {/* 섹션 라벨 */}
       <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
-        {COPY.location.sectionLabel}
+        {t("location.sectionLabel")}
       </p>
 
-      {/* 현재 위치 버튼 */}
       <button
         onClick={onDetectLocation}
         disabled={isDetecting}
@@ -38,15 +39,13 @@ export function LocationSelector({
         )}
       >
         <MapPin className="w-4 h-4" />
-        {isDetecting ? "Detecting..." : COPY.location.useMyLocation}
+        {isDetecting ? t("location.detecting") : t("location.useMyLocation")}
       </button>
 
-      {/* 구분선 */}
       <p className="text-center text-xs text-muted-foreground my-4">
-        {COPY.location.orPickCity}
+        {t("location.orPickCity")}
       </p>
 
-      {/* 도시 카드 그리드 */}
       <div className="grid grid-cols-3 gap-3">
         {CITIES.map((city) => {
           const isSelected = selectedCity === city.key;
@@ -65,12 +64,10 @@ export function LocationSelector({
               <span
                 className={cn(
                   "text-sm font-medium",
-                  isSelected
-                    ? "text-[var(--pt-purple)]"
-                    : "text-foreground"
+                  isSelected ? "text-[var(--pt-purple)]" : "text-foreground"
                 )}
               >
-                {city.label}
+                {t(`cities.${city.key}`)}
               </span>
             </button>
           );

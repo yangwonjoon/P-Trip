@@ -1,7 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { COPY } from "@/shared/config";
 
 const CARDS = [
   { rotate: -8, bg: "bg-[var(--pt-purple)]/30", delay: 0 },
@@ -10,9 +10,10 @@ const CARDS = [
 ];
 
 export function ShuffleAnimation() {
+  const t = useTranslations();
+
   return (
     <div className="flex flex-col items-center px-6 py-12">
-      {/* 카드 3장 겹침 비주얼 */}
       <div className="relative w-48 h-64 mb-8">
         {CARDS.map((card, i) => (
           <motion.div
@@ -30,31 +31,23 @@ export function ShuffleAnimation() {
               ease: "easeInOut",
             }}
           >
-            {i === CARDS.length - 1 && (
-              <span className="text-4xl">👹</span>
-            )}
+            {i === CARDS.length - 1 && <span className="text-4xl">👹</span>}
           </motion.div>
         ))}
       </div>
 
-      {/* 셔플링 텍스트 */}
-      <h2 className="text-lg font-bold mb-2">{COPY.draw.shufflingTitle}</h2>
+      <h2 className="text-lg font-bold mb-2">{t("draw.shufflingTitle")}</h2>
       <p className="text-sm text-muted-foreground mb-6">
-        {COPY.draw.shufflingSub}
+        {t("draw.shufflingSub")}
       </p>
 
-      {/* 로딩 점 3개 */}
       <div className="flex gap-1.5">
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
             className="w-2 h-2 rounded-full bg-[var(--pt-purple)]"
             animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{
-              duration: 1,
-              delay: i * 0.2,
-              repeat: Infinity,
-            }}
+            transition={{ duration: 1, delay: i * 0.2, repeat: Infinity }}
           />
         ))}
       </div>
