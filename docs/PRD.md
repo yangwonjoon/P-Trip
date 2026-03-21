@@ -196,7 +196,7 @@
 ### Place (장소)
 | 필드 | 타입 | 설명 |
 |------|------|------|
-| id | string | 고유 식별자 |
+| id | uuid | 고유 식별자 (auto-generated) |
 | name_en | string | 장소 이름 (영어) |
 | name_ko | string | 장소 이름 (한국어) |
 | category | enum | FOOD / ATTRACTION / SHOPPING |
@@ -222,6 +222,8 @@
 | source | enum | KAKAO / GOOGLE / MANUAL / COMMUNITY |
 | kakao_place_id | string? | 카카오 Local API 장소 ID (연동 시) |
 | google_place_id | string? | Google Places API 장소 ID (연동 시) |
+| created_at | datetime | 생성 시각 (auto) |
+| updated_at | datetime | 수정 시각 (auto, 트리거) |
 
 ### DayCourse (하루 코스)
 | 필드 | 타입 | 설명 |

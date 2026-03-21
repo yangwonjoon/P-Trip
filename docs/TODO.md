@@ -1,16 +1,15 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-21 (세션 #4 — UI 개발 완료)
+> 마지막 업데이트: 2026-03-22 (세션 #5 — UI 마무리 + 외부 서비스 셋업 완료)
 
 ---
 
-## 현재 단계: 🎨 UI 개발 + 🔑 외부 서비스 셋업
+## 현재 단계: 🗄️ DB & 데이터 연동 (Step 3)
 
-프로젝트 초기화 & FSD 아키텍처 완료 → **UI 개발 (Claude) + API 키 발급 (Yang) 병렬 진행**
+Step 1~4 완료, 외부 서비스 키 발급 완료 → **Step 3 (DB 스키마 + 데이터 연동) 진행**
 
-### 지금 진행 중인 것
-- **Yang**: Step 2 — 카카오/Google/Supabase API 키 발급 중
-- **Claude**: Step 4 — ✅ 목데이터 기반 UI 개발 완료 (세션 #4)
+### 다음 할 일
+- **Step 3**: Supabase 스키마 생성 → 시드 데이터 → API 연동 테스트 → 목데이터를 실제 데이터로 교체
 
 ---
 
@@ -29,12 +28,12 @@
 
 | # | 태스크 | 어디서 | 비고 | 상태 |
 |---|--------|--------|------|------|
-| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | 🔄 |
-| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | 🔄 |
-| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | 🔄 |
-| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | 🔄 |
-| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | 🔄 |
-| 2-6 | `.env.local` 파일에 키 등록 | 로컬 | 아래 env 템플릿 참고 | ⬜ |
+| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | ✅ |
+| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | ✅ |
+| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | ✅ |
+| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | ✅ |
+| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | ✅ |
+| 2-6 | `.env.local` 파일에 키 등록 | 로컬 | 아래 env 템플릿 참고 | ✅ |
 
 ### `.env.local` 템플릿
 ```
@@ -55,8 +54,8 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | 필요한 것 | 상태 |
 |---|--------|-----------|------|
-| 3-1 | Supabase DB 스키마 생성 (places 테이블) | 2-5 완료 | ⬜ |
-| 3-2 | 시드 데이터 준비 (서울 장소 10~20개, 수동 입력) | 3-1 완료 | ⬜ |
+| 3-1 | Supabase DB 스키마 생성 (places 테이블) | 2-5 완료 | ✅ |
+| 3-2 | 시드 데이터 준비 (서울 장소 15개) | 3-1 완료 | ✅ |
 | 3-3 | 카카오 Local API 연동 테스트 | 2-1 완료 | ⬜ |
 | 3-4 | Google Places API 영문 매칭 테스트 | 2-4 완료 | ⬜ |
 | 3-5 | 데이터 파이프라인 스크립트 (카카오→영문변환→Supabase) | 3-3, 3-4 완료 | ⬜ |
@@ -106,8 +105,8 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | 비고 | 상태 |
 |---|--------|------|------|
-| 4-16 | 모바일 반응형 점검 (390px 기준) | 전체 페이지 | ⬜ |
-| 4-17 | 길안내 버튼 (구글맵 딥링크) | 공통 | ⬜ |
+| 4-16 | 모바일 반응형 점검 (390px 기준) | 전체 페이지 | ✅ |
+| 4-17 | 길안내 버튼 (구글맵 딥링크) | 공통 | ✅ |
 
 ## Step 5 — 배포 & 런칭
 

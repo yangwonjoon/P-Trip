@@ -5,6 +5,63 @@
 
 ---
 
+## 2026-03-22 | 세션 #5 — UI 마무리 + DB 스키마 + Supabase 연동
+
+### 논의 배경
+- Step 4 UI 개발 완료 후 마무리 작업 (반응형, 길안내 버튼) 진행
+- Yang이 외부 서비스 키 발급 완료 → Step 3 (DB & 데이터) 착수
+- 개발 플로우 규칙 정비 (문서 자동 업데이트 + 커밋)
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | Place id 타입 | UUID (auto-generated) | PostgreSQL `gen_random_uuid()` |
+| 2 | enum 구현 방식 | text + CHECK 제약조건 | enum 타입 대신 — 마이그레이션 유연성 |
+| 3 | 배열 필드 | PostgreSQL `text[]` | images, tags |
+| 4 | RLS 정책 | 읽기 공개, 쓰기 제한 | anon 사용자 select 허용, insert/update는 대시보드/service_role만 |
+| 5 | 길안내 URL | Google Maps Directions 딥링크 | `google_maps_url` 대신 좌표 기반 directions URL 생성 |
+| 6 | 개발 플로우 | CLAUDE.md에 명시 | TECH/TODO/PRD/CHANGELOG 자동 업데이트 + 빌드 + 커밋 |
+
+### 완료 항목
+- `.vscode/` gitignore 추가
+- 모바일 반응형 점검: Header 언어 선택 hover → click 토글 변환 (모바일 터치 지원)
+- 길안내 버튼: `getDirectionsUrl()` 유틸 생성, Google Maps Directions 딥링크 적용
+- Supabase 스키마: `supabase/migrations/20260322_create_places.sql` (places 테이블 + 인덱스 + RLS + 트리거)
+- Supabase 클라이언트: `src/shared/api/supabase.ts`
+- 시드 데이터: `supabase/seed.sql` (서울 장소 15개)
+- Place API 쿼리: `src/entities/place/api/queries.ts` (getPlaces, getPlaceById, drawRandomPlace)
+- 외부 서비스 셋업 완료 (카카오, Google, Supabase 키 발급 + `.env.local` 등록)
+
+### PRD 변경 내역
+- Place 데이터 모델: `id` 타입 string → uuid, `created_at`/`updated_at` 필드 추가
+
+### 다음 단계
+- [ ] Supabase에서 마이그레이션 + 시드 SQL 실행
+- [ ] 카카오 Local API 연동 테스트 (3-3)
+- [ ] Google Places API 영문 매칭 테스트 (3-4)
+- [ ] 목데이터를 실제 Supabase 데이터로 교체
+
+---
+
+## 2026-03-21 | 세션 #4 — UI 개발 완료 + 다국어 지원
+
+### 논의 배경
+- Step 4 UI 개발 (목데이터 기반) 전체 진행
+- i18n (다국어 지원) Phase 2 항목이었으나 조기 적용
+
+### 완료 항목
+- 전체 UI 컴포넌트 구현 (Step 4A~4D: Header, HeroSection, LocationSelector, ModeSelector, CategorySelect, ShuffleAnimation, DrawResult, DrawController, PlaceCard, PlaceHero, PlaceInfo, PlaceDetails, DokkaebiTip, MapEmbed, ResultDetail)
+- 3개 페이지 조합 완료 (랜딩, 카드 드로우, 결과 상세)
+- next-intl 기반 다국어 지원 (en, ko, ja, zh)
+- `[locale]` 라우팅 + 브라우저 언어 자동 감지
+
+### 다음 단계 (예정)
+- [ ] UI 마무리 (반응형 점검, 길안내 버튼) → 세션 #5에서 완료
+- [ ] 외부 서비스 셋업 → 세션 #5에서 완료
+
+---
+
 ## 2026-03-21 | 세션 #3 — 프로젝트 셋업 & FSD 아키텍처 도입
 
 ### 논의 배경

@@ -75,12 +75,17 @@
 
 사용 예: `bg-[var(--pt-purple)]`, `border-[var(--pt-teal)]`
 
-### 목데이터 구조
+### 목데이터 → Supabase 전환
 
-`src/shared/mocks/places.ts` — 서울 장소 6개 (카테고리별 2개). `Place` 타입 준수.
-API 연결 후 Supabase 쿼리로 대체 예정. 목데이터 참조 위치:
+**목데이터** (`src/shared/mocks/places.ts`): 서울 장소 6개. 개발 초기 UI 확인용으로 사용.
+목데이터 참조 위치 (실제 데이터 연결 시 교체 대상):
 - `widgets/draw-controller/model/useDrawState.ts` — 랜덤 장소 선택
-- `app/result/[id]/page.tsx` — ID로 장소 조회
+- `app/[locale]/result/[id]/page.tsx` — ID로 장소 조회
+
+**Supabase 쿼리 API** (`src/entities/place/api/queries.ts`):
+- `getPlaces(city, category?)` — 도시+카테고리로 장소 목록 조회
+- `getPlaceById(id)` — 단일 장소 조회 (결과 상세 페이지)
+- `drawRandomPlace(city, category)` — 가중치 기반 랜덤 1개 뽑기 (카드 드로우)
 
 ### 다국어 (i18n) — next-intl
 
@@ -99,6 +104,49 @@ API 연결 후 Supabase 쿼리로 대체 예정. 목데이터 참조 위치:
 - **categories/cities**: label/description을 메시지 파일에서 관리, config에는 key/emoji/color만 유지
 - **기존 `copy.ts` 삭제**: 모든 텍스트가 `messages/*.json`으로 이관됨
 - **장소 데이터 다국어**: API 연결 후 별도 진행 (DB 스키마 확장 필요)
+
+---
+
+## 데이터베이스 (Supabase)
+
+### 스키마
+
+**places 테이블** (`supabase/migrations/20260322_create_places.sql`):
+- PRD §6 `Place` 모델과 1:1 매핑
+- `id`: UUID (auto-generated)
+- `images`, `tags`: PostgreSQL 배열 (`text[]`)
+- `rating`: `numeric(2,1)`, `weight`: `numeric(3,2)`
+- `category`, `city`, `source`: text + CHECK 제약조건 (enum 대신 — 마이그레이션 유연성)
+- `created_at`, `updated_at`: 자동 타임스탬프 (updated_at은 트리거로 자동 갱신)
+
+### RLS (Row Level Security)
+
+- 읽기: anon 사용자 공개 허용 (`select using (true)`)
+- 쓰기: 현재 정책 없음 → Supabase 대시보드 또는 service_role key로만 삽입/수정 가능
+- 추후 관리자 인증 추가 시 INSERT/UPDATE 정책 추가 예정
+
+### 인덱스
+
+- `idx_places_city_category`: (city, category) — 핵심 쿼리 패턴 (도시 선택 → 카테고리 필터)
+- `idx_places_category`: (category) — 카테고리 전체 조회
+
+### 시드 데이터
+
+- `supabase/seed.sql`: 서울 장소 15개 (FOOD 5, ATTRACTION 5, SHOPPING 5)
+- 수동 큐레이션 데이터 (`source: 'MANUAL'`)
+- Supabase SQL Editor에서 마이그레이션 → 시드 순서로 실행
+
+### 데이터 관리 방식
+
+- **MVP**: Supabase 대시보드 Table Editor로 직접 CRUD (소규모 데이터)
+- **확장 시**: 카카오 Local API → Google Places 영문 매칭 → Supabase INSERT 파이프라인 스크립트 (`3-5`)
+- **가중치 조정**: `weight` 컬럼으로 노출 빈도 조절 (기본 1.0, 대시보드에서 수동 변경)
+
+### Supabase 클라이언트
+
+- `src/shared/api/supabase.ts` — `createClient(url, anonKey)`
+- 클라이언트 컴포넌트와 서버 컴포넌트 모두에서 사용 가능 (anon key는 NEXT_PUBLIC)
+- 서버 전용 작업(관리자 쓰기)이 필요할 경우 `SUPABASE_SERVICE_ROLE_KEY`로 별도 클라이언트 생성
 
 ---
 
@@ -122,6 +170,13 @@ API 연결 후 Supabase 쿼리로 대체 예정. 목데이터 참조 위치:
 - **현재**: placeholder (`shared/ui/MapEmbed.tsx`)
 - **구현 시**: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` 사용, iframe embed
 
+### 길안내 딥링크
+
+- `src/entities/place/lib/getDirectionsUrl.ts`
+- Google Maps Directions 딥링크 생성: `https://www.google.com/maps/dir/?api=1&destination={lat},{lng}`
+- 모바일에서 Google Maps 앱 직접 실행, 웹에서는 Google Maps 웹 열림
+- `google_place_id`가 있으면 `destination_place_id` 파라미터 추가하여 정확도 향상
+
 ---
 
-*마지막 업데이트: 2026-03-21 (세션 #4 — i18n 추가)*
+*마지막 업데이트: 2026-03-22 (세션 #5 — DB 스키마, Supabase 연동, 길안내 딥링크)*
