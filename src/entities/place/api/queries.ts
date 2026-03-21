@@ -1,26 +1,27 @@
 import { supabase } from "@/shared/api";
 import type { Place } from "../model/types";
-import type { Category, City } from "@/shared/config";
+import type { Category, Coordinates } from "@/shared/config";
+import { DEFAULT_RADIUS_KM } from "@/shared/config";
 
-/** 도시+카테고리로 장소 목록 조회 */
-export async function getPlaces(city: City, category?: Category): Promise<Place[]> {
-  let query = supabase
-    .from("places")
-    .select("*")
-    .eq("city", city);
-
-  if (category) {
-    query = query.eq("category", category);
-  }
-
-  const { data, error } = await query;
+/** 좌표 기반 반경 내 장소 조회 (Supabase RPC — Haversine) */
+export async function getNearbyPlaces(
+  coords: Coordinates,
+  category?: Category,
+  radiusKm: number = DEFAULT_RADIUS_KM
+): Promise<Place[]> {
+  const { data, error } = await supabase.rpc("get_nearby_places", {
+    user_lat: coords.lat,
+    user_lng: coords.lng,
+    radius_km: radiusKm,
+    filter_category: category ?? null,
+  });
 
   if (error) {
-    console.error("Failed to fetch places:", error);
+    console.error("Failed to fetch nearby places:", error);
     return [];
   }
 
-  return data as Place[];
+  return (data ?? []) as Place[];
 }
 
 /** 단일 장소 조회 (결과 상세 페이지용) */
@@ -39,10 +40,13 @@ export async function getPlaceById(id: string): Promise<Place | null> {
   return data as Place;
 }
 
-/** 가중치 기반 랜덤 장소 1개 뽑기 (카드 드로우용) */
-export async function drawRandomPlace(city: City, category: Category): Promise<Place | null> {
-  // weight 기반 가중치 랜덤: 모든 후보를 가져온 후 클라이언트에서 가중치 적용
-  const places = await getPlaces(city, category);
+/** 가중치 기반 랜덤 장소 1개 뽑기 — 반경 내 장소에서 선택 */
+export async function drawNearbyRandomPlace(
+  coords: Coordinates,
+  category: Category,
+  radiusKm: number = DEFAULT_RADIUS_KM
+): Promise<Place | null> {
+  const places = await getNearbyPlaces(coords, category, radiusKm);
   if (places.length === 0) return null;
 
   const totalWeight = places.reduce((sum, p) => sum + p.weight, 0);

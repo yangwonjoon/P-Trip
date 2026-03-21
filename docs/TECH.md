@@ -83,9 +83,9 @@
 - `app/[locale]/result/[id]/page.tsx` — ID로 장소 조회
 
 **Supabase 쿼리 API** (`src/entities/place/api/queries.ts`):
-- `getPlaces(city, category?)` — 도시+카테고리로 장소 목록 조회
+- `getNearbyPlaces(coords, category?, radiusKm?)` — 좌표 기반 반경 내 장소 조회 (Haversine RPC)
 - `getPlaceById(id)` — 단일 장소 조회 (결과 상세 페이지)
-- `drawRandomPlace(city, category)` — 가중치 기반 랜덤 1개 뽑기 (카드 드로우)
+- `drawNearbyRandomPlace(coords, category, radiusKm?)` — 반경 내 가중치 기반 랜덤 1개 뽑기 (카드 드로우)
 
 ### 다국어 (i18n) — next-intl
 
@@ -125,10 +125,18 @@
 - 쓰기: 현재 정책 없음 → Supabase 대시보드 또는 service_role key로만 삽입/수정 가능
 - 추후 관리자 인증 추가 시 INSERT/UPDATE 정책 추가 예정
 
+### RPC 함수
+
+- `get_nearby_places(user_lat, user_lng, radius_km, filter_category)` — Haversine 공식으로 반경 내 장소 반환
+  - 기본 반경: 40km
+  - distance_km 컬럼 포함하여 거리순 정렬
+  - 마이그레이션: `supabase/migrations/20260322_nearby_places.sql`
+
 ### 인덱스
 
-- `idx_places_city_category`: (city, category) — 핵심 쿼리 패턴 (도시 선택 → 카테고리 필터)
+- `idx_places_city_category`: (city, category) — 레거시 (도시 기반 쿼리용)
 - `idx_places_category`: (category) — 카테고리 전체 조회
+- `idx_places_lat_lng`: (latitude, longitude) — 반경 검색 성능 향상
 
 ### 시드 데이터
 
@@ -184,10 +192,34 @@
 ## 데이터 연결 현황
 
 - **목데이터 → Supabase 전환 완료**: `useDrawState`와 `result/[id]/page.tsx`에서 Supabase 쿼리 사용
-- `useDrawState(city)`: `drawRandomPlace(city, category)` → 가중치 기반 랜덤 장소 선택
+- `useDrawState(coords)`: `drawNearbyRandomPlace(coords, category)` → 반경 내 가중치 기반 랜덤 장소 선택
 - `result/[id]/page.tsx`: `getPlaceById(id)` → UUID로 장소 조회 (서버 컴포넌트)
 - 목데이터(`shared/mocks/`)는 아직 남아있으나 더 이상 참조하지 않음
 
 ---
 
-*마지막 업데이트: 2026-03-22 (세션 #5 — Supabase 연동, 목데이터 교체, API Route Handler)*
+## 위치 감지 & 반경 검색
+
+### 도시 선택 → 좌표 기반 전환 (세션 #6)
+
+- **이전**: 서울/부산/제주 3개 도시 선택 → `city` 컬럼으로 필터
+- **현재**: 브라우저 Geolocation API로 좌표 감지 → Haversine 반경 40km 내 장소 검색
+- **이유**: 파주/고양 등 도시 외곽에서도 근처 장소가 자연스럽게 노출되도록
+
+### 흐름
+
+1. 랜딩 페이지 로드 시 `useLocation()` 훅이 자동으로 위치 감지
+2. `navigator.geolocation.getCurrentPosition()` → lat/lng 좌표 저장
+3. 위치 거부/에러 시 서울 시청 좌표(37.5665, 126.978)로 폴백
+4. URL 파라미터: `?lat=X&lng=Y&mode=category` (기존 `?city=SEOUL` 대체)
+5. Draw 페이지에서 `get_nearby_places` RPC로 반경 내 장소 조회
+
+### 설정값
+
+- `DEFAULT_RADIUS_KM`: 40km (shared/config/types.ts)
+- `FALLBACK_COORDS`: { lat: 37.5665, lng: 126.978 } (서울 시청)
+- Coordinates 타입: `{ lat: number; lng: number }`
+
+---
+
+*마지막 업데이트: 2026-03-22 (세션 #6 — 좌표 기반 반경 검색 전환)*

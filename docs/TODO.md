@@ -1,6 +1,6 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-22 (세션 #5 — Step 3 완료, Supabase + Google Maps 연동)
+> 마지막 업데이트: 2026-03-22 (세션 #6 — 좌표 기반 반경 검색 전환)
 
 ---
 
@@ -79,7 +79,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
 | 4-3 | HeroSection 위젯 (도깨비 플레이스홀더 + 카피) | `widgets/hero-section/` | WIREFRAME.md §1 히어로 | ✅ |
-| 4-4 | 위치 설정 feature (자동감지 + 도시 카드 3개) | `features/select-location/` | WIREFRAME.md §1 위치 | ✅ |
+| 4-4 | 위치 설정 feature (좌표 기반 자동감지) | `features/select-location/` | 반경 40km 검색 | ✅ |
 | 4-5 | 모드 선택 카드 (Category / Mix / Course) | `widgets/mode-selector/` | WIREFRAME.md §1 모드 | ✅ |
 | 4-6 | 랜딩 페이지 조합 (위 위젯들 + CTA) | `app/page.tsx` | — | ✅ |
 
@@ -148,7 +148,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 - [ ] 하루 코스 생성기 (`/course`) + Google Maps JavaScript API
 - [ ] 소셜 공유 (OG 메타 + 공유 버튼)
 - [ ] 장소 데이터 확장 (부산, 제주)
-- [ ] 위치 기반 거리순 정렬
+- [x] 위치 기반 거리순 정렬 (좌표 기반 반경 검색으로 전환)
 - [ ] 관리자 가중치 설정
 - [ ] 사용자 계정 + 커뮤니티 (Phase 3)
 

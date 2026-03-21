@@ -5,6 +5,38 @@
 
 ---
 
+## 2026-03-22 | 세션 #6 — 좌표 기반 반경 검색 전환
+
+### 논의 배경
+- 도시 3개(서울/부산/제주) 고정 선택 방식의 한계: 파주/고양 등 도시 외곽에서 항상 서울만 노출
+- 사용자 실제 위치 기반으로 근처 장소를 자연스럽게 추천하도록 개선 필요
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 위치 감지 방식 | 브라우저 Geolocation → 좌표 저장 | 기존 도시 선택 제거 |
+| 2 | 장소 검색 방식 | Haversine 반경 40km | Supabase RPC 함수 |
+| 3 | 폴백 좌표 | 서울 시청 (37.5665, 126.978) | 위치 거부/에러 시 |
+| 4 | URL 파라미터 | `?lat=X&lng=Y&mode=category` | 기존 `?city=SEOUL` 대체 |
+
+### 완료 항목
+- Supabase RPC 함수 `get_nearby_places` 마이그레이션 작성 (Haversine 거리 계산)
+- `useLocation` 훅: 실제 좌표 저장 + 자동 감지 + 에러 폴백
+- `LocationSelector` UI: 도시 선택 버튼 제거, 위치 감지 상태 표시로 간소화
+- `queries.ts`: `getNearbyPlaces`, `drawNearbyRandomPlace` 반경 기반 함수로 전환
+- `useDrawState`, `DrawController`: city → coordinates 파라미터 전환
+- 랜딩/드로우 페이지: URL 파라미터 lat/lng 전달
+- 4개 언어 메시지 파일 업데이트 (detected, nearMe, fallback 등 키 추가)
+- lat/lng 인덱스 추가 (`idx_places_lat_lng`)
+
+### 다음 단계 (세션 #7)
+- [ ] Supabase에 RPC 함수 실행 (대시보드 SQL Editor)
+- [ ] 부산/제주 외 지역 장소 데이터 추가
+- [ ] Step 5 — 배포 & 런칭 (Vercel, SEO, GA, AdSense)
+
+---
+
 ## 2026-03-22 | 세션 #5 — UI 마무리 + DB 스키마 + Supabase 연동
 
 ### 논의 배경
