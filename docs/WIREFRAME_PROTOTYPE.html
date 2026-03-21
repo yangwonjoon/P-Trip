@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P's Trip — Wireframe Prototype</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0eff5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 16px; }
+
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; background: white; padding: 4px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: sticky; top: 8px; z-index: 100; }
+  .tab-btn { padding: 8px 14px; border: none; background: transparent; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; color: #888; transition: all 0.2s; }
+  .tab-btn.active { background: #534AB7; color: white; }
+
+  .page { display: none; width: 100%; max-width: 390px; }
+  .page.active { display: block; }
+
+  .phone { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+
+  .header { padding: 10px 16px; border-bottom: 0.5px solid #e8e7e4; display: flex; align-items: center; gap: 8px; }
+  .header .back { color: #888; font-size: 14px; cursor: pointer; }
+  .header .logo { display: flex; align-items: center; gap: 6px; }
+  .header .logo-circle { width: 22px; height: 22px; border-radius: 50%; background: #26215C; display: flex; align-items: center; justify-content: center; }
+  .header .logo-circle span { color: #AFA9EC; font-size: 10px; font-weight: 600; }
+  .header .logo-text { font-weight: 600; font-size: 14px; }
+  .header .city-badge { margin-left: auto; font-size: 11px; color: #888; background: #f1efe8; padding: 2px 8px; border-radius: 12px; }
+
+  .state-label { font-size: 10px; color: #534AB7; font-weight: 600; text-align: center; padding: 8px; letter-spacing: 0.5px; background: #EEEDFE; cursor: pointer; user-select: none; }
+  .state-label:hover { background: #CECBF6; }
+
+  .sub-tab-bar { display: flex; border-bottom: 0.5px solid #e8e7e4; }
+  .sub-tab { flex: 1; padding: 10px 8px; font-size: 11px; text-align: center; cursor: pointer; color: #888; border-bottom: 2px solid transparent; transition: all 0.2s; font-weight: 500; }
+  .sub-tab.active { color: #534AB7; border-bottom-color: #534AB7; }
+
+  .label { font-size: 12px; color: #888; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('landing')">/ Landing</button>
+  <button class="tab-btn" onclick="showPage('draw')">/draw</button>
+  <button class="tab-btn" onclick="showPage('result')">/result/:id</button>
+</div>
+
+<!-- ==================== LANDING PAGE ==================== -->
+<div class="page active" id="page-landing">
+<div class="phone">
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-circle"><span>P</span></div>
+      <span class="logo-text">P's Trip</span>
+    </div>
+    <span style="margin-left:auto; font-size:13px; color:#888;">About</span>
+  </div>
+
+  <!-- Hero -->
+  <div style="background: linear-gradient(180deg, #26215C 0%, #3C3489 100%); padding: 28px 20px 20px; text-align: center; position: relative;">
+    <div style="position:absolute;top:12px;left:16px;font-size:11px;color:#AFA9EC;letter-spacing:1px;">✦ ✦ ✦</div>
+    <div style="position:absolute;top:12px;right:16px;font-size:11px;color:#AFA9EC;letter-spacing:1px;">✦ ✦ ✦</div>
+    <div style="width:120px;height:120px;border-radius:50%;background:rgba(175,169,236,0.15);border:2px dashed rgba(175,169,236,0.4);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+      <span style="font-size:11px;color:#AFA9EC;font-weight:500;">DOKKAEBI</span>
+      <span style="font-size:11px;color:#AFA9EC;">mascot here</span>
+      <span style="font-size:9px;color:rgba(175,169,236,0.6);margin-top:2px;">hip / street style</span>
+    </div>
+    <p style="font-size:13px;color:#CECBF6;margin:0 0 4px;letter-spacing:0.5px;">Don't know where to go?</p>
+    <p style="font-size:20px;font-weight:600;color:white;margin:0 0 6px;">Let the Dokkaebi decide.</p>
+    <p style="font-size:12px;color:#AFA9EC;margin:0;">Your trickster guide to Korea</p>
+    <div style="display:flex;justify-content:center;gap:6px;margin-top:16px;">
+      <span style="background:rgba(175,169,236,0.2);color:#CECBF6;font-size:11px;padding:4px 10px;border-radius:20px;">🍲 food</span>
+      <span style="background:rgba(175,169,236,0.2);color:#CECBF6;font-size:11px;padding:4px 10px;border-radius:20px;">🏯 spots</span>
+      <span style="background:rgba(175,169,236,0.2);color:#CECBF6;font-size:11px;padding:4px 10px;border-radius:20px;">🛍 shop</span>
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div style="padding:20px 20px 16px;">
+    <p class="label" style="margin-bottom:10px;">Where are you?</p>
+    <button style="width:100%;padding:14px 16px;border-radius:12px;border:2px solid #1D9E75;background:#E1F5EE;color:#085041;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;">
+      📍 Use my location
+    </button>
+    <p style="font-size:11px;color:#b4b2a9;text-align:center;margin:0 0 10px;">or pick a city</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+      <div style="padding:12px 8px;border-radius:8px;border:2px solid #534AB7;background:#EEEDFE;text-align:center;cursor:pointer;">
+        <div style="font-size:18px;margin-bottom:2px;">🏯</div>
+        <span style="font-size:13px;font-weight:500;color:#3C3489;">Seoul</span>
+      </div>
+      <div style="padding:12px 8px;border-radius:8px;border:0.5px solid #e8e7e4;text-align:center;cursor:pointer;">
+        <div style="font-size:18px;margin-bottom:2px;">🏖</div>
+        <span style="font-size:13px;font-weight:500;">Busan</span>
+      </div>
+      <div style="padding:12px 8px;border-radius:8px;border:0.5px solid #e8e7e4;text-align:center;cursor:pointer;">
+        <div style="font-size:18px;margin-bottom:2px;">🌊</div>
+        <span style="font-size:13px;font-weight:500;">Jeju</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode Selection -->
+  <div style="padding:0 20px 20px;">
+    <p class="label" style="margin-bottom:10px;">Pick your vibe</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="padding:14px 16px;border-radius:12px;border:0.5px solid #e8e7e4;cursor:pointer;display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:8px;background:#FAECE7;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🍲</div>
+        <div style="flex:1;">
+          <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Category draw</p>
+          <p style="font-size:11px;color:#888;margin:0;">Pick a deck — food, spots, or shopping</p>
+        </div>
+        <span style="color:#ccc;font-size:14px;">›</span>
+      </div>
+      <div style="padding:14px 16px;border-radius:12px;border:0.5px solid #e8e7e4;cursor:pointer;display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:8px;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🔀</div>
+        <div style="flex:1;">
+          <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Mix draw</p>
+          <p style="font-size:11px;color:#888;margin:0;">All shuffled — the Dokkaebi picks for you</p>
+        </div>
+        <span style="color:#ccc;font-size:14px;">›</span>
+      </div>
+      <div style="padding:14px 16px;border-radius:12px;border:0.5px solid #e8e7e4;cursor:pointer;display:flex;align-items:center;gap:12px;opacity:0.7;position:relative;">
+        <div style="width:44px;height:44px;border-radius:8px;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🌍</div>
+        <div style="flex:1;">
+          <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Full day course</p>
+          <p style="font-size:11px;color:#888;margin:0;">4 cards — morning to dinner</p>
+        </div>
+        <span style="font-size:10px;background:#26215C;color:#CECBF6;padding:3px 8px;border-radius:20px;position:absolute;top:8px;right:10px;">coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="padding:0 20px 20px;">
+    <button style="width:100%;padding:16px;border-radius:12px;border:none;background:#534AB7;color:white;font-size:15px;font-weight:500;cursor:pointer;">Shuffle & draw 🃏</button>
+    <p style="font-size:11px;color:#b4b2a9;text-align:center;margin:10px 0 0;">"Plans? The Dokkaebi doesn't know that word."</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== DRAW PAGE ==================== -->
+<div class="page" id="page-draw">
+<div class="phone">
+
+  <div class="header">
+    <span class="back">←</span>
+    <div class="logo">
+      <div class="logo-circle"><span>P</span></div>
+      <span class="logo-text">P's Trip</span>
+    </div>
+    <span class="city-badge">Seoul</span>
+  </div>
+
+  <div class="sub-tab-bar">
+    <div class="sub-tab active" onclick="showDrawState(1)">① Select</div>
+    <div class="sub-tab" onclick="showDrawState(2)">② Shuffle</div>
+    <div class="sub-tab" onclick="showDrawState(3)">③ Result</div>
+  </div>
+
+  <!-- State 1: Category Select -->
+  <div id="draw-state-1">
+    <div style="padding:24px 16px 16px;text-align:center;">
+      <div style="width:80px;height:80px;border-radius:50%;background:rgba(83,74,183,0.08);border:1.5px dashed rgba(83,74,183,0.3);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:9px;color:#534AB7;">dokkaebi</span>
+      </div>
+      <p style="font-size:15px;font-weight:500;margin:0 0 4px;">Pick your deck</p>
+      <p style="font-size:12px;color:#888;margin:0;">What are you in the mood for?</p>
+    </div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;">
+      <div style="padding:14px;border-radius:12px;border:2px solid #D85A30;background:#FAECE7;cursor:pointer;display:flex;align-items:center;gap:10px;">
+        <div style="width:38px;height:38px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center;font-size:18px;">🍲</div>
+        <div><p style="font-size:14px;font-weight:500;margin:0;color:#712B13;">Food & restaurants</p><p style="font-size:11px;color:#993C1D;margin:0;">BBQ, street food, cafes...</p></div>
+      </div>
+      <div style="padding:14px;border-radius:12px;border:0.5px solid #e8e7e4;cursor:pointer;display:flex;align-items:center;gap:10px;">
+        <div style="width:38px;height:38px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:18px;">🏯</div>
+        <div><p style="font-size:14px;font-weight:500;margin:0;">Attractions</p><p style="font-size:11px;color:#888;margin:0;">Temples, parks, views...</p></div>
+      </div>
+      <div style="padding:14px;border-radius:12px;border:0.5px solid #e8e7e4;cursor:pointer;display:flex;align-items:center;gap:10px;">
+        <div style="width:38px;height:38px;border-radius:8px;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:18px;">🛍</div>
+        <div><p style="font-size:14px;font-weight:500;margin:0;">Shopping & markets</p><p style="font-size:11px;color:#888;margin:0;">Traditional markets, malls...</p></div>
+      </div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <button style="width:100%;padding:14px;border-radius:12px;border:none;background:#534AB7;color:white;font-size:14px;font-weight:500;cursor:pointer;" onclick="showDrawState(2)">Shuffle this deck 🃏</button>
+    </div>
+  </div>
+
+  <!-- State 2: Shuffling -->
+  <div id="draw-state-2" style="display:none;">
+    <div style="padding:40px 16px;text-align:center;min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="position:relative;width:160px;height:200px;margin:0 auto 24px;">
+        <div style="position:absolute;width:120px;height:170px;border-radius:12px;background:#EEEDFE;border:2px solid #AFA9EC;top:0;left:10px;transform:rotate(-8deg);"></div>
+        <div style="position:absolute;width:120px;height:170px;border-radius:12px;background:#CECBF6;border:2px solid #7F77DD;top:0;left:18px;transform:rotate(-3deg);"></div>
+        <div style="position:absolute;width:120px;height:170px;border-radius:12px;background:#534AB7;border:2px solid #3C3489;top:0;left:26px;transform:rotate(2deg);display:flex;align-items:center;justify-content:center;">
+          <div style="width:50px;height:50px;border-radius:50%;border:1.5px dashed rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:8px;color:rgba(255,255,255,0.6);">dokkaebi</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:16px;font-weight:500;color:#534AB7;margin:0 0 6px;">Shuffling the deck...</p>
+      <p style="font-size:12px;color:#888;margin:0;">"The Dokkaebi is messing with your fate"</p>
+      <div style="margin-top:20px;display:flex;gap:6px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#534AB7;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#CECBF6;"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#CECBF6;"></div>
+      </div>
+      <button style="margin-top:24px;padding:10px 20px;border-radius:8px;border:0.5px solid #e8e7e4;background:white;font-size:12px;color:#888;cursor:pointer;" onclick="showDrawState(3)">→ Skip to result (prototype only)</button>
+    </div>
+  </div>
+
+  <!-- State 3: Result -->
+  <div id="draw-state-3" style="display:none;">
+    <div style="padding:16px 16px 8px;text-align:center;">
+      <p style="font-size:12px;color:#534AB7;margin:0 0 2px;font-weight:500;">"The Dokkaebi has spoken!"</p>
+      <p style="font-size:11px;color:#b4b2a9;margin:0;">No takebacks. (okay, maybe one.)</p>
+    </div>
+    <div style="padding:0 16px 12px;">
+      <div style="border-radius:12px;border:0.5px solid #e8e7e4;overflow:hidden;">
+        <div style="height:140px;background:#D3D1C7;display:flex;align-items:center;justify-content:center;position:relative;">
+          <span style="font-size:12px;color:#5F5E5A;">Place photo</span>
+          <span style="position:absolute;top:8px;left:8px;background:#D85A30;color:white;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:500;">Food</span>
+        </div>
+        <div style="padding:14px;">
+          <p style="font-size:17px;font-weight:500;margin:0 0 2px;">Gwangjang Market</p>
+          <p style="font-size:13px;color:#888;margin:0 0 8px;">광장시장</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+            <span style="font-size:10px;background:#FAECE7;color:#712B13;padding:3px 8px;border-radius:12px;">street-food</span>
+            <span style="font-size:10px;background:#FAECE7;color:#712B13;padding:3px 8px;border-radius:12px;">traditional</span>
+            <span style="font-size:10px;background:#FAECE7;color:#712B13;padding:3px 8px;border-radius:12px;">budget</span>
+          </div>
+          <p style="font-size:12px;color:#888;margin:0 0 10px;line-height:1.5;">One of Seoul's oldest markets. Famous for bindaetteok and mayak gimbap.</p>
+          <div style="font-size:11px;color:#888;display:flex;flex-direction:column;gap:4px;padding:10px 0;border-top:0.5px solid #e8e7e4;">
+            <span>🕓 9:00 AM - 11:00 PM</span>
+            <span>📍 88 Changgyeonggung-ro, Jongno-gu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 16px 4px;">
+      <div style="height:100px;border-radius:8px;background:#D3D1C7;display:flex;align-items:center;justify-content:center;border:0.5px solid #e8e7e4;">
+        <span style="font-size:11px;color:#5F5E5A;">Google Maps Embed</span>
+      </div>
+    </div>
+    <div style="padding:12px 16px 16px;display:flex;flex-direction:column;gap:8px;">
+      <button style="width:100%;padding:12px;border-radius:12px;border:none;background:#1D9E75;color:white;font-size:13px;font-weight:500;cursor:pointer;">📍 Get directions on Google Maps</button>
+      <button style="width:100%;padding:12px;border-radius:12px;border:2px solid #534AB7;background:transparent;color:#534AB7;font-size:13px;font-weight:500;cursor:pointer;" onclick="showDrawState(1)">Draw again 🔀</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== RESULT PAGE ==================== -->
+<div class="page" id="page-result">
+<div class="phone">
+
+  <div class="header">
+    <span class="back">←</span>
+    <div class="logo">
+      <div class="logo-circle"><span>P</span></div>
+      <span class="logo-text">P's Trip</span>
+    </div>
+    <span style="margin-left:auto;font-size:13px;color:#888;">↗</span>
+  </div>
+
+  <!-- Hero Photo -->
+  <div style="position:relative;">
+    <div style="height:220px;background:#B4B2A9;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:13px;color:#5F5E5A;">Hero photo — place main image</span>
+    </div>
+    <span style="position:absolute;top:12px;left:12px;background:#D85A30;color:white;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:500;">Food</span>
+    <div style="position:absolute;bottom:-18px;right:16px;width:36px;height:36px;border-radius:50%;background:#534AB7;display:flex;align-items:center;justify-content:center;border:2px solid white;">
+      <span style="color:white;font-size:14px;">↗</span>
+    </div>
+  </div>
+
+  <!-- Place Info -->
+  <div style="padding:24px 16px 12px;">
+    <p style="font-size:20px;font-weight:600;margin:0 0 2px;">Gwangjang Market</p>
+    <p style="font-size:14px;color:#888;margin:0 0 12px;">광장시장</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+      <span style="font-size:11px;background:#FAECE7;color:#712B13;padding:4px 10px;border-radius:20px;">street-food</span>
+      <span style="font-size:11px;background:#FAECE7;color:#712B13;padding:4px 10px;border-radius:20px;">traditional</span>
+      <span style="font-size:11px;background:#FAECE7;color:#712B13;padding:4px 10px;border-radius:20px;">budget</span>
+      <span style="font-size:11px;background:#FAECE7;color:#712B13;padding:4px 10px;border-radius:20px;">instagram</span>
+    </div>
+    <p style="font-size:14px;line-height:1.7;margin:0 0 4px;">One of Seoul's oldest and largest traditional markets, dating back to 1905. Famous for bindaetteok (mung bean pancakes), mayak gimbap, and fresh knife-cut noodles.</p>
+    <p style="font-size:14px;line-height:1.7;margin:0;">Come hungry — this is where locals eat.</p>
+  </div>
+
+  <!-- Details Block -->
+  <div style="padding:0 16px 16px;">
+    <div style="background:#f5f4f0;border-radius:12px;padding:14px;">
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="flex-shrink:0;width:20px;text-align:center;">🕓</span>
+          <div><p style="margin:0;font-weight:500;">Hours</p><p style="margin:2px 0 0;color:#888;font-size:12px;">9:00 AM - 11:00 PM (closed Sundays)</p></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="flex-shrink:0;width:20px;text-align:center;">📍</span>
+          <div><p style="margin:0;font-weight:500;">Address</p><p style="margin:2px 0 0;color:#888;font-size:12px;">88 Changgyeonggung-ro, Jongno-gu, Seoul</p></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="flex-shrink:0;width:20px;text-align:center;">🚆</span>
+          <div><p style="margin:0;font-weight:500;">Nearest station</p><p style="margin:2px 0 0;color:#888;font-size:12px;">Jongno 5-ga (Line 1) — 2 min walk</p></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <span style="flex-shrink:0;width:20px;text-align:center;">💰</span>
+          <div><p style="margin:0;font-weight:500;">Budget</p><p style="margin:2px 0 0;color:#888;font-size:12px;">5,000 - 15,000 KRW per person</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photos -->
+  <div style="padding:0 16px 4px;">
+    <p style="font-size:12px;color:#888;margin:0 0 6px;font-weight:500;">Photos</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="height:90px;background:#D3D1C7;border-radius:8px;display:flex;align-items:center;justify-content:center;"><span style="font-size:10px;color:#5F5E5A;">photo 1</span></div>
+      <div style="height:90px;background:#D3D1C7;border-radius:8px;display:flex;align-items:center;justify-content:center;"><span style="font-size:10px;color:#5F5E5A;">photo 2</span></div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div style="padding:16px 16px 4px;">
+    <p style="font-size:12px;color:#888;margin:0 0 6px;font-weight:500;">Location</p>
+    <div style="height:160px;border-radius:12px;background:#D3D1C7;display:flex;align-items:center;justify-content:center;border:0.5px solid #e8e7e4;">
+      <span style="font-size:12px;color:#5F5E5A;">Google Maps Embed (larger)</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+    <button style="width:100%;padding:14px;border-radius:12px;border:none;background:#1D9E75;color:white;font-size:14px;font-weight:500;cursor:pointer;">📍 Get directions</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button style="padding:12px;border-radius:12px;border:0.5px solid #e8e7e4;background:white;font-size:13px;font-weight:500;cursor:pointer;">↗ Share</button>
+      <button style="padding:12px;border-radius:12px;border:2px solid #534AB7;background:transparent;color:#534AB7;font-size:13px;font-weight:500;cursor:pointer;">🔀 Draw again</button>
+    </div>
+  </div>
+
+  <!-- Dokkaebi Tip -->
+  <div style="padding:0 16px 16px;">
+    <div style="background:#EEEDFE;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(83,74,183,0.15);border:1.5px dashed rgba(83,74,183,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <span style="font-size:8px;color:#534AB7;">☺</span>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:500;color:#3C3489;margin:0 0 2px;">Dokkaebi tip</p>
+        <p style="font-size:12px;color:#534AB7;margin:0;line-height:1.5;">"Try the mayak gimbap first — you'll see why they call it addictive."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad -->
+  <div style="padding:0 16px 16px;">
+    <div style="background:#f5f4f0;border-radius:8px;padding:10px 14px;text-align:center;">
+      <span style="font-size:11px;color:#b4b2a9;">Ad space — Google AdSense banner</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showDrawState(n) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('draw-state-' + i).style.display = i === n ? 'block' : 'none';
+  }
+  document.querySelectorAll('.sub-tab').forEach((t, idx) => {
+    t.classList.toggle('active', idx === n - 1);
+  });
+}
+</script>
+
+</body>
+</html>
