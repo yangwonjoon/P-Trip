@@ -216,7 +216,9 @@
 
 ### 설정값
 
-- `DEFAULT_RADIUS_KM`: 25km (shared/config/types.ts)
+- `getRadiusForLocation(coords)`: 좌표 기반 동적 반경 결정 (shared/config/types.ts)
+  - 서울: 5km / 부산·인천: 7km / 대구·대전·광주·울산: 8km / 세종: 12km / 제주: 15km
+  - 그 외 지역: `DEFAULT_RADIUS_KM` = 25km
 - `FALLBACK_COORDS`: { lat: 37.5665, lng: 126.978 } (서울 시청)
 - Coordinates 타입: `{ lat: number; lng: number }`
 
