@@ -20,13 +20,13 @@
 
 - PRD 내용이 변경되면: `docs/PRD.md` 업데이트 + `docs/CHANGELOG.md`에 변경 내역 추가를 **반드시 함께** 수행
 - CHANGELOG는 최신 항목이 맨 위에 오도록 역순으로 기록
-- CHANGELOG 작성 시 세션 번호를 이어서 매김 (현재 세션 #2까지 완료)
+- CHANGELOG 작성 시 세션 번호를 이어서 매김 (현재 세션 #3까지 완료)
 - 와이어프레임 변경 시 `docs/WIREFRAME.md`도 함께 업데이트
 
 ## 기술 스택
 
 - **프레임워크**: Next.js 16 (App Router) + TypeScript
-- **스타일링**: Tailwind CSS + shadcn/ui
+- **스타일링**: Tailwind CSS v4 + shadcn/ui
 - **DB**: Supabase (PostgreSQL)
 - **장소 데이터**: 카카오 Local API + Google Places API
 - **지도 (MVP)**: Google Maps Embed API → 추후 JavaScript API 확장
@@ -35,37 +35,178 @@
 - **광고**: Google AdSense
 - **분석**: Google Analytics
 
-## 프로젝트 구조
+---
+
+## FSD 아키텍처 (Feature-Sliced Design)
+
+### 원칙
+
+이 프로젝트는 **FSD (Feature-Sliced Design)** 아키텍처를 따른다.
+레이어 간 **단방향 의존성**: `app → widgets → features → entities → shared` (상위→하위만 import 허용, 역방향 금지)
+
+### 레이어 정의
+
+| 레이어 | 역할 | 예시 |
+|--------|------|------|
+| `app/` | Next.js App Router 라우팅. 페이지 컴포넌트는 widget/feature를 조합만 함 | `app/page.tsx`, `app/draw/page.tsx` |
+| `widgets/` | 독립적인 UI 블록. 여러 feature/entity를 조합 | `Header`, `HeroSection`, `ResultCard` |
+| `features/` | 하나의 사용자 행동 단위. 비즈니스 로직 포함 | `draw-card`, `select-location`, `select-category` |
+| `entities/` | 비즈니스 도메인 객체. 타입 + UI + API | `place`, `city`, `category` |
+| `shared/` | 프로젝트 전체 공유. 도메인 무관 | `ui/`, `lib/`, `config/`, `api/` |
+
+### 슬라이스 내부 세그먼트 구조
+
+각 슬라이스(폴더)는 필요한 세그먼트만 생성한다 (빈 폴더 금지):
 
 ```
-ps-trip/
+feature-name/
+├── ui/           # 컴포넌트 (*.tsx)
+├── model/        # 상태, 훅, 비즈니스 로직 (useXxx.ts, store.ts)
+├── api/          # 데이터 fetching (queries, mutations)
+├── lib/          # 슬라이스 전용 유틸
+├── config/       # 슬라이스 전용 상수
+└── index.ts      # Public API (이 슬라이스의 외부 노출 인터페이스)
+```
+
+### Public API 규칙
+
+- 슬라이스 외부에서는 **반드시 `index.ts`를 통해서만** import
+- `@/features/draw-card`는 OK, `@/features/draw-card/ui/ShuffleButton`은 금지
+- `shared/ui`는 예외적으로 개별 컴포넌트 직접 import 허용 (shadcn/ui 패턴)
+
+### 프로젝트 구조
+
+```
+p-trip/
 ├── CLAUDE.md
-├── docs/                    # 기획 문서
+├── docs/                           # 기획 문서
 ├── src/
-│   ├── app/                 # Next.js App Router 페이지
-│   │   ├── page.tsx         # / 랜딩
+│   ├── app/                        # [Layer] App — Next.js 라우팅
+│   │   ├── layout.tsx
+│   │   ├── page.tsx                # / 랜딩 (widgets 조합)
 │   │   ├── draw/
-│   │   │   └── page.tsx     # /draw 카드 드로우
-│   │   ├── result/
-│   │   │   └── [id]/
-│   │   │       └── page.tsx # /result/:id 결과 상세
-│   │   └── layout.tsx
-│   ├── components/          # 재사용 컴포넌트
-│   │   ├── ui/              # shadcn/ui 기본 컴포넌트
-│   │   ├── layout/          # Header, Footer 등
-│   │   ├── draw/            # 카드 드로우 관련
-│   │   ├── result/          # 결과 표시 관련
-│   │   └── map/             # 지도 관련
-│   ├── lib/                 # 유틸리티, API 클라이언트
-│   │   ├── supabase.ts
-│   │   ├── kakao.ts
-│   │   └── google-maps.ts
-│   ├── types/               # TypeScript 타입 정의
-│   └── constants/           # 상수 (카테고리, 도시, 브랜딩 멘트)
-├── public/                  # 정적 자산 (마스코트 이미지 등)
-└── supabase/                # Supabase 마이그레이션
+│   │   │   └── page.tsx            # /draw (widgets 조합)
+│   │   └── result/
+│   │       └── [id]/
+│   │           └── page.tsx        # /result/:id (widgets 조합)
+│   │
+│   ├── widgets/                    # [Layer] Widgets — 독립 UI 블록
+│   │   ├── header/
+│   │   │   ├── ui/
+│   │   │   └── index.ts
+│   │   ├── hero-section/
+│   │   │   ├── ui/
+│   │   │   └── index.ts
+│   │   ├── draw-controller/        # /draw 3상태 전환 관리
+│   │   │   ├── ui/
+│   │   │   ├── model/
+│   │   │   └── index.ts
+│   │   └── result-detail/          # /result/:id 상세 뷰
+│   │       ├── ui/
+│   │       └── index.ts
+│   │
+│   ├── features/                   # [Layer] Features — 사용자 행동 단위
+│   │   ├── draw-card/              # 카드 뽑기 (셔플 애니메이션 + 결과)
+│   │   │   ├── ui/
+│   │   │   ├── model/
+│   │   │   ├── api/
+│   │   │   └── index.ts
+│   │   ├── select-location/        # 위치 설정 (자동감지 + 도시 선택)
+│   │   │   ├── ui/
+│   │   │   ├── model/
+│   │   │   └── index.ts
+│   │   └── select-category/        # 카테고리 선택
+│   │       ├── ui/
+│   │       ├── model/
+│   │       └── index.ts
+│   │
+│   ├── entities/                   # [Layer] Entities — 도메인 객체
+│   │   ├── place/
+│   │   │   ├── ui/                 # PlaceCard, PlaceInfo 등
+│   │   │   ├── model/              # Place 타입, 유틸
+│   │   │   ├── api/                # Supabase 쿼리
+│   │   │   └── index.ts
+│   │   └── city/
+│   │       ├── model/
+│   │       └── index.ts
+│   │
+│   └── shared/                     # [Layer] Shared — 공유 자원
+│       ├── ui/                     # shadcn/ui + 커스텀 공통 컴포넌트
+│       ├── lib/                    # 유틸 (cn, formatters 등)
+│       ├── api/                    # API 클라이언트 (supabase, kakao, google)
+│       └── config/                 # 상수 (컬러, 브랜딩 멘트, env)
+│
+├── public/                         # 정적 자산
+└── supabase/                       # Supabase 마이그레이션
     └── migrations/
 ```
+
+### FSD 체크리스트 (코드 작성 시)
+
+1. **새 파일 생성 전** — 어느 레이어에 속하는지 결정
+2. **import 작성 시** — 같은 레이어 또는 하위 레이어에서만 import하는지 확인
+3. **슬라이스 외부 노출 시** — `index.ts`에 export 추가
+4. **app/ 페이지** — 직접 로직 금지, widget/feature 조합만
+5. **shared/** — 도메인 용어(place, draw 등) 사용 금지
+
+---
+
+## Git 커밋 컨벤션
+
+### 형식
+
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+### Type
+
+| type | 용도 |
+|------|------|
+| `feat` | 새 기능 추가 |
+| `fix` | 버그 수정 |
+| `refactor` | 기능 변경 없는 코드 구조 개선 |
+| `style` | UI/CSS 변경 (코드 포매팅 아님) |
+| `docs` | 문서 변경 |
+| `chore` | 빌드, 설정, 패키지 등 코드 외 변경 |
+| `test` | 테스트 추가/수정 |
+
+### Scope (FSD 레이어 기반)
+
+scope는 **FSD 슬라이스명** 또는 **레이어명**을 사용:
+
+```
+feat(draw-card): 셔플 애니메이션 구현
+feat(select-location): 브라우저 위치 자동감지 추가
+fix(place): 영업시간 포맷 오류 수정
+style(hero-section): 히어로 그라데이션 조정
+chore(shared): shadcn/ui Card 컴포넌트 추가
+refactor(entities): Place 타입에 optional 필드 추가
+docs: TODO.md 업데이트
+```
+
+### 규칙
+
+- **한국어 커밋 메시지** 사용 (subject, body 모두)
+- **작은 단위로 자주 커밋** — 하나의 커밋 = 하나의 변경 목적
+  - 컴포넌트 1개 추가 = 1커밋
+  - 타입 정의 + 상수 = 각각 별도 커밋 가능
+  - 여러 파일이더라도 하나의 목적이면 1커밋
+- **커밋 전 빌드 확인** — `npm run build` 통과하는 상태에서만 커밋
+- body에는 **왜 이 변경을 했는지** 적기 (선택, 복잡한 변경 시)
+
+### 커밋 단위 가이드
+
+| 좋은 예 (작고 명확) | 나쁜 예 (너무 큰 단위) |
+|---------------------|----------------------|
+| `feat(place): Place 엔티티 타입 정의` | `feat: 프로젝트 전체 셋업` |
+| `feat(header): Header 위젯 구현` | `feat: 랜딩 페이지 전체 구현` |
+| `chore(shared): Framer Motion 설치` | `chore: 패키지 여러 개 설치` |
+| `style(hero-section): 모바일 반응형 조정` | `style: CSS 수정` |
+
+---
 
 ## 개발 컨벤션
 
@@ -75,6 +216,7 @@ ps-trip/
 - 유틸/훅: camelCase (`useDrawState.ts`)
 - 상수: UPPER_SNAKE_CASE (`CATEGORIES`)
 - 타입: PascalCase + 접미사 없음 (`Place`, `DrawResult`)
+- 슬라이스 폴더: kebab-case (`draw-card`, `select-location`)
 
 ### 컴포넌트 규칙
 
@@ -88,10 +230,7 @@ ps-trip/
 - 코드 주석/커밋: 한국어 OK
 - 카드 셔플/드로우 용어 사용 (돌림판/스핀 사용 금지)
 
-### Git 커밋
-
-- 한국어 커밋 메시지 OK
-- 형식: `feat: 기능`, `fix: 수정`, `docs: 문서`, `style: 스타일`, `refactor: 리팩토링`
+---
 
 ## MVP 페이지 (Phase 1)
 
@@ -144,8 +283,10 @@ interface Place {
 
 - [x] PRD 작성 & 미결 사항 확정 (세션 #1)
 - [x] 와이어프레임 / UI 설계 (세션 #2)
+- [x] Next.js 프로젝트 초기화 (세션 #3)
+- [x] FSD 아키텍처 & 커밋 컨벤션 정의 (세션 #3)
+- [ ] FSD 구조로 리팩토링
 - [ ] 도깨비 마스코트 일러스트 제작
-- [ ] Next.js 프로젝트 초기화
 - [ ] Supabase 스키마 생성
 - [ ] API 키 발급 (카카오, Google)
 - [ ] 카드 셔플 애니메이션 프로토타입

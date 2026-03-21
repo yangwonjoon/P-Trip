@@ -5,6 +5,41 @@
 
 ---
 
+## 2026-03-21 | 세션 #3 — 프로젝트 셋업 & FSD 아키텍처 도입
+
+### 논의 배경
+- 개발 착수를 위한 프로젝트 초기화
+- 코드 아키텍처 및 개발 규칙 정립 필요
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 아키텍처 | FSD (Feature-Sliced Design) | 레이어: app → widgets → features → entities → shared. 단방향 의존성 |
+| 2 | 기본 타입 위치 | shared/config/types.ts | Category, City, DataSource 등 기본 enum은 shared에 배치. 복합 타입(Place)은 entities에 |
+| 3 | Public API 규칙 | 슬라이스 외부는 index.ts 통해서만 import | shared/ui는 예외 허용 |
+| 4 | 커밋 컨벤션 | Conventional Commits + FSD scope | `feat(draw-card):`, `style(hero-section):` 등 |
+| 5 | 커밋 단위 | 작은 단위로 자주 | 하나의 커밋 = 하나의 변경 목적 |
+| 6 | 태스크 트래커 | docs/TODO.md 신설 | 단계별 할 일 + 필요한 것 + 진행 상태 |
+
+### 완료 항목
+- Next.js 16 프로젝트 초기화 (App Router, TypeScript, Tailwind v4, Turbopack)
+- shadcn/ui + Framer Motion 설치
+- FSD 디렉토리 구조 생성 및 기존 코드 리팩토링
+- 타입 정의 (Place, Category, City, DrawState 등)
+- 상수 정의 (카테고리, 도시, 컬러, 브랜딩 멘트)
+- 페이지 스켈레톤 (/, /draw, /result/[id])
+- P's Trip 브랜드 컬러 CSS 변수 적용
+- CLAUDE.md에 FSD 규칙 & 커밋 컨벤션 문서화
+- TODO.md 태스크 트래커 생성
+
+### 다음 단계 (예정)
+- [ ] API 키 발급 (카카오, Google, Supabase) — Yang 직접
+- [ ] UI 개발 시작 (랜딩 페이지 위젯부터)
+- [ ] 도깨비 마스코트 일러스트 제작 (병렬)
+
+---
+
 ## 2026-03-21 | 세션 #2 — 와이어프레임 / UI 설계 & 도깨비 마스코트 도입
 
 ### 논의 배경
