@@ -1,15 +1,15 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-22 (세션 #5 — UI 마무리 + 외부 서비스 셋업 완료)
+> 마지막 업데이트: 2026-03-22 (세션 #5 — Step 3 완료, Supabase + Google Maps 연동)
 
 ---
 
-## 현재 단계: 🗄️ DB & 데이터 연동 (Step 3)
+## 현재 단계: 🚀 배포 & 런칭 (Step 5)
 
-Step 1~4 완료, 외부 서비스 키 발급 완료 → **Step 3 (DB 스키마 + 데이터 연동) 진행**
+Step 1~4 완료, Step 3 DB 연동 완료 → **Step 5 (Vercel 배포 + SEO + 분석) 진행**
 
 ### 다음 할 일
-- **Step 3-6**: 목데이터 → Supabase 실제 데이터 연결 (카카오는 비즈앱 심사 후 Phase 2에서 연동)
+- **Step 5**: Vercel 배포 → 환경변수 등록 → SEO → GA → AdSense
 
 ---
 

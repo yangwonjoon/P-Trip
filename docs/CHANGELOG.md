@@ -34,12 +34,13 @@
 - 외부 서비스 셋업 완료 (카카오, Google, Supabase 키 발급)
 - API Route Handler: 카카오 검색 (⏸ 심사 대기), Google Place Details (✅ 동작 확인)
 - **목데이터 → Supabase 전환 완료**: useDrawState, result/[id] 페이지 모두 실제 DB 연결
+- **Google Maps Embed API 연동**: MapEmbed 플레이스홀더 → 실제 iframe 지도 표시
 
 ### PRD 변경 내역
 - Place 데이터 모델: `id` 타입 string → uuid, `created_at`/`updated_at` 필드 추가
 - 데이터 소싱 전략: MVP를 "시드 데이터 + Google Places" 방식으로 변경, 카카오는 Phase 2
 
-### 다음 단계
+### 다음 단계 (세션 #6)
 - [ ] Step 5 — 배포 & 런칭 (Vercel, SEO, GA, AdSense)
 
 ---
