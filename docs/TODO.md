@@ -1,6 +1,6 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-21 (세션 #3 완료)
+> 마지막 업데이트: 2026-03-21 (세션 #4 — UI 개발 완료)
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### 지금 진행 중인 것
 - **Yang**: Step 2 — 카카오/Google/Supabase API 키 발급 중
-- **Claude (다음 세션)**: Step 4 — 목데이터 기반 UI 개발 (키 없이 가능)
+- **Claude**: Step 4 — ✅ 목데이터 기반 UI 개발 완료 (세션 #4)
 
 ---
 
@@ -71,36 +71,36 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
-| 4-1 | Header 위젯 (로고 + 뒤로 + 도시 뱃지) | `widgets/header/` | WIREFRAME.md 공통 요소 | ⬜ |
-| 4-2 | 목데이터 생성 (서울 장소 5~10개) | `shared/mocks/` | PRD §6 데이터 모델 기준 | ⬜ |
+| 4-1 | Header 위젯 (로고 + 뒤로 + 도시 뱃지) | `widgets/header/` | WIREFRAME.md 공통 요소 | ✅ |
+| 4-2 | 목데이터 생성 (서울 장소 6개) | `shared/mocks/` | PRD §6 데이터 모델 기준 | ✅ |
 
 ### 4B. 랜딩 페이지 (`/`)
 
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
-| 4-3 | HeroSection 위젯 (도깨비 플레이스홀더 + 카피) | `widgets/hero-section/` | WIREFRAME.md §1 히어로 | ⬜ |
-| 4-4 | 위치 설정 feature (자동감지 + 도시 카드 3개) | `features/select-location/` | WIREFRAME.md §1 위치 | ⬜ |
-| 4-5 | 모드 선택 카드 (Category / Mix / Course) | `widgets/mode-selector/` | WIREFRAME.md §1 모드 | ⬜ |
-| 4-6 | 랜딩 페이지 조합 (위 위젯들 + CTA) | `app/page.tsx` | — | ⬜ |
+| 4-3 | HeroSection 위젯 (도깨비 플레이스홀더 + 카피) | `widgets/hero-section/` | WIREFRAME.md §1 히어로 | ✅ |
+| 4-4 | 위치 설정 feature (자동감지 + 도시 카드 3개) | `features/select-location/` | WIREFRAME.md §1 위치 | ✅ |
+| 4-5 | 모드 선택 카드 (Category / Mix / Course) | `widgets/mode-selector/` | WIREFRAME.md §1 모드 | ✅ |
+| 4-6 | 랜딩 페이지 조합 (위 위젯들 + CTA) | `app/page.tsx` | — | ✅ |
 
 ### 4C. 카드 드로우 페이지 (`/draw`)
 
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
-| 4-7 | 카테고리 선택 UI (State 1) | `features/select-category/` | WIREFRAME.md §2 State 1 | ⬜ |
-| 4-8 | 셔플 애니메이션 (State 2, Framer Motion) | `features/draw-card/` | WIREFRAME.md §2 State 2 | ⬜ |
-| 4-9 | 간략 결과 카드 (State 3) | `entities/place/ui/` + `features/draw-card/` | WIREFRAME.md §2 State 3 | ⬜ |
-| 4-10 | DrawController 위젯 (3상태 전환, AnimatePresence) | `widgets/draw-controller/` | WIREFRAME.md §2 | ⬜ |
+| 4-7 | 카테고리 선택 UI (State 1) | `features/select-category/` | WIREFRAME.md §2 State 1 | ✅ |
+| 4-8 | 셔플 애니메이션 (State 2, Framer Motion) | `features/draw-card/` | WIREFRAME.md §2 State 2 | ✅ |
+| 4-9 | 간략 결과 카드 (State 3) | `entities/place/ui/` + `features/draw-card/` | WIREFRAME.md §2 State 3 | ✅ |
+| 4-10 | DrawController 위젯 (3상태 전환, AnimatePresence) | `widgets/draw-controller/` | WIREFRAME.md §2 | ✅ |
 
 ### 4D. 결과 상세 페이지 (`/result/:id`)
 
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
-| 4-11 | PlaceHero (사진 + 뱃지 + 공유 FAB) | `entities/place/ui/` | WIREFRAME.md §3 | ⬜ |
-| 4-12 | PlaceInfo + PlaceDetails (정보 블록) | `entities/place/ui/` | WIREFRAME.md §3 | ⬜ |
-| 4-13 | DokkaebiTip 컴포넌트 | `shared/ui/` | WIREFRAME.md §3 | ⬜ |
-| 4-14 | Google Maps Embed 컴포넌트 | `shared/ui/` | — | ⬜ |
-| 4-15 | 결과 상세 페이지 조합 | `app/result/[id]/page.tsx` | — | ⬜ |
+| 4-11 | PlaceHero (사진 + 뱃지 + 공유 FAB) | `entities/place/ui/` | WIREFRAME.md §3 | ✅ |
+| 4-12 | PlaceInfo + PlaceDetails (정보 블록) | `entities/place/ui/` | WIREFRAME.md §3 | ✅ |
+| 4-13 | DokkaebiTip 컴포넌트 | `shared/ui/` | WIREFRAME.md §3 | ✅ |
+| 4-14 | Google Maps Embed 컴포넌트 | `shared/ui/` | — | ✅ |
+| 4-15 | 결과 상세 페이지 조합 | `app/result/[id]/page.tsx` | — | ✅ |
 
 ### 4E. 마무리
 
