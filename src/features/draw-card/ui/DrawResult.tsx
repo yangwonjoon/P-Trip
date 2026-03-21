@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { MapPin, RotateCcw } from "lucide-react";
 import type { Place } from "@/entities/place";
+import { getDirectionsUrl } from "@/entities/place";
 import { PlaceCard } from "@/entities/place/ui";
 import { Button } from "@/shared/ui";
 import { Link } from "@/i18n/navigation";
@@ -29,7 +30,7 @@ export function DrawResult({ place, onDrawAgain }: DrawResultProps) {
       </div>
 
       <div className="mt-4 flex flex-col gap-3">
-        <a href={place.google_maps_url} target="_blank" rel="noopener noreferrer">
+        <a href={getDirectionsUrl(place)} target="_blank" rel="noopener noreferrer">
           <Button className="w-full h-11 bg-[var(--pt-teal)] hover:bg-[var(--pt-teal)]/90 text-white font-semibold">
             <MapPin className="w-4 h-4 mr-1.5" />
             {t("actions.getDirections")}
