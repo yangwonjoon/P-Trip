@@ -1,12 +1,16 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-21 (세션 #3 — 프로젝트 초기화 완료)
+> 마지막 업데이트: 2026-03-21 (세션 #3 완료)
 
 ---
 
-## 현재 단계: 🔑 외부 서비스 셋업 + UI 개발
+## 현재 단계: 🎨 UI 개발 + 🔑 외부 서비스 셋업
 
-프로젝트 초기화 완료 → **API 키 발급 (Yang) + UI 개발 병렬 진행**
+프로젝트 초기화 & FSD 아키텍처 완료 → **UI 개발 (Claude) + API 키 발급 (Yang) 병렬 진행**
+
+### 지금 진행 중인 것
+- **Yang**: Step 2 — 카카오/Google/Supabase API 키 발급 중
+- **Claude (다음 세션)**: Step 4 — 목데이터 기반 UI 개발 (키 없이 가능)
 
 ---
 
@@ -25,11 +29,11 @@
 
 | # | 태스크 | 어디서 | 비고 | 상태 |
 |---|--------|--------|------|------|
-| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | ⬜ |
-| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | ⬜ |
-| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | ⬜ |
-| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | ⬜ |
-| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | ⬜ |
+| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | 🔄 |
+| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | 🔄 |
+| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | 🔄 |
+| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | 🔄 |
+| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | 🔄 |
 | 2-6 | `.env.local` 파일에 키 등록 | 로컬 | 아래 env 템플릿 참고 | ⬜ |
 
 ### `.env.local` 템플릿
@@ -57,23 +61,53 @@ SUPABASE_SERVICE_ROLE_KEY=
 | 3-4 | Google Places API 영문 매칭 테스트 | 2-4 완료 | ⬜ |
 | 3-5 | 데이터 파이프라인 스크립트 (카카오→영문변환→Supabase) | 3-3, 3-4 완료 | ⬜ |
 
-## Step 4 — UI 개발 (MVP 핵심)
+## Step 4 — UI 개발 (MVP 핵심, 목데이터로 진행)
 
-| # | 태스크 | 와이어프레임 참고 | 상태 |
-|---|--------|-------------------|------|
-| 4-1 | 공통: Header 컴포넌트 | WIREFRAME.md 공통 요소 | ⬜ |
-| 4-2 | 공통: 컬러 시스템 & 테마 설정 | WIREFRAME.md 컬러 시스템 | ⬜ |
-| 4-3 | 랜딩(`/`): 히어로 영역 (도깨비 플레이스홀더) | WIREFRAME.md §1 | ⬜ |
-| 4-4 | 랜딩(`/`): 위치 설정 (자동감지 + 도시 선택) | WIREFRAME.md §1 | ⬜ |
-| 4-5 | 랜딩(`/`): 모드 선택 카드 | WIREFRAME.md §1 | ⬜ |
-| 4-6 | `/draw`: State 1 — 카테고리 선택 | WIREFRAME.md §2 | ⬜ |
-| 4-7 | `/draw`: State 2 — 셔플 애니메이션 (Framer Motion) | WIREFRAME.md §2 | ⬜ |
-| 4-8 | `/draw`: State 3 — 간략 결과 카드 | WIREFRAME.md §2 | ⬜ |
-| 4-9 | `/draw`: 3상태 전환 컨트롤러 (AnimatePresence) | WIREFRAME.md §2 | ⬜ |
-| 4-10 | `/result/:id`: 상세 페이지 전체 | WIREFRAME.md §3 | ⬜ |
-| 4-11 | 공통: Google Maps Embed 컴포넌트 | — | ⬜ |
-| 4-12 | 공통: 길안내 버튼 (구글맵 링크) | — | ⬜ |
-| 4-13 | 모바일 반응형 점검 | 390px 기준 | ⬜ |
+> API 키 없이 진행 가능. 목데이터(mock)로 UI 완성 후 Step 3 완료 시 실제 데이터 연결.
+> 참고 문서: `docs/WIREFRAME.md`, `docs/WIREFRAME_PROTOTYPE.html`
+> FSD 규칙: `CLAUDE.md` — app/ 페이지는 widget 조합만, 로직은 features/에
+
+### 4A. 공통 (shared / widgets)
+
+| # | 태스크 | FSD 위치 | 참고 | 상태 |
+|---|--------|----------|------|------|
+| 4-1 | Header 위젯 (로고 + 뒤로 + 도시 뱃지) | `widgets/header/` | WIREFRAME.md 공통 요소 | ⬜ |
+| 4-2 | 목데이터 생성 (서울 장소 5~10개) | `shared/mocks/` | PRD §6 데이터 모델 기준 | ⬜ |
+
+### 4B. 랜딩 페이지 (`/`)
+
+| # | 태스크 | FSD 위치 | 참고 | 상태 |
+|---|--------|----------|------|------|
+| 4-3 | HeroSection 위젯 (도깨비 플레이스홀더 + 카피) | `widgets/hero-section/` | WIREFRAME.md §1 히어로 | ⬜ |
+| 4-4 | 위치 설정 feature (자동감지 + 도시 카드 3개) | `features/select-location/` | WIREFRAME.md §1 위치 | ⬜ |
+| 4-5 | 모드 선택 카드 (Category / Mix / Course) | `widgets/mode-selector/` | WIREFRAME.md §1 모드 | ⬜ |
+| 4-6 | 랜딩 페이지 조합 (위 위젯들 + CTA) | `app/page.tsx` | — | ⬜ |
+
+### 4C. 카드 드로우 페이지 (`/draw`)
+
+| # | 태스크 | FSD 위치 | 참고 | 상태 |
+|---|--------|----------|------|------|
+| 4-7 | 카테고리 선택 UI (State 1) | `features/select-category/` | WIREFRAME.md §2 State 1 | ⬜ |
+| 4-8 | 셔플 애니메이션 (State 2, Framer Motion) | `features/draw-card/` | WIREFRAME.md §2 State 2 | ⬜ |
+| 4-9 | 간략 결과 카드 (State 3) | `entities/place/ui/` + `features/draw-card/` | WIREFRAME.md §2 State 3 | ⬜ |
+| 4-10 | DrawController 위젯 (3상태 전환, AnimatePresence) | `widgets/draw-controller/` | WIREFRAME.md §2 | ⬜ |
+
+### 4D. 결과 상세 페이지 (`/result/:id`)
+
+| # | 태스크 | FSD 위치 | 참고 | 상태 |
+|---|--------|----------|------|------|
+| 4-11 | PlaceHero (사진 + 뱃지 + 공유 FAB) | `entities/place/ui/` | WIREFRAME.md §3 | ⬜ |
+| 4-12 | PlaceInfo + PlaceDetails (정보 블록) | `entities/place/ui/` | WIREFRAME.md §3 | ⬜ |
+| 4-13 | DokkaebiTip 컴포넌트 | `shared/ui/` | WIREFRAME.md §3 | ⬜ |
+| 4-14 | Google Maps Embed 컴포넌트 | `shared/ui/` | — | ⬜ |
+| 4-15 | 결과 상세 페이지 조합 | `app/result/[id]/page.tsx` | — | ⬜ |
+
+### 4E. 마무리
+
+| # | 태스크 | 비고 | 상태 |
+|---|--------|------|------|
+| 4-16 | 모바일 반응형 점검 (390px 기준) | 전체 페이지 | ⬜ |
+| 4-17 | 길안내 버튼 (구글맵 딥링크) | 공통 | ⬜ |
 
 ## Step 5 — 배포 & 런칭
 
