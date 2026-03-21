@@ -218,7 +218,9 @@
 
 - `getRadiusForLocation(coords)`: 좌표 기반 동적 반경 결정 (shared/config/types.ts)
   - 서울: 5km / 부산·인천: 7km / 대구·대전·광주·울산: 8km / 세종: 12km / 제주: 15km
-  - 그 외 지역: `DEFAULT_RADIUS_KM` = 25km
+  - 그 외 지역: `DEFAULT_RADIUS_KM` = 15km
+- **반경 확대 폴백**: 결과가 없으면 반경을 2배씩 확대하여 재검색 (최대 80km)
+  - 예: 파주(15km) → 결과 없음 → 30km → 결과 없음 → 60km → 서울 장소 발견
 - `FALLBACK_COORDS`: { lat: 37.5665, lng: 126.978 } (서울 시청)
 - Coordinates 타입: `{ lat: number; lng: number }`
 
