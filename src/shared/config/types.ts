@@ -12,8 +12,8 @@ export interface Coordinates {
   lng: number;
 }
 
-/** 반경 검색 기본값 (km) */
-export const DEFAULT_RADIUS_KM = 40;
+/** 반경 검색 기본값 (km) — 체감 거리 고려하여 25km 설정 */
+export const DEFAULT_RADIUS_KM = 25;
 
 /** 위치 감지 실패 시 폴백 좌표 (서울 시청) */
 export const FALLBACK_COORDS: Coordinates = {

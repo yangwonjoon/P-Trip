@@ -216,7 +216,7 @@
 
 ### 설정값
 
-- `DEFAULT_RADIUS_KM`: 40km (shared/config/types.ts)
+- `DEFAULT_RADIUS_KM`: 25km (shared/config/types.ts)
 - `FALLBACK_COORDS`: { lat: 37.5665, lng: 126.978 } (서울 시청)
 - Coordinates 타입: `{ lat: number; lng: number }`
 
