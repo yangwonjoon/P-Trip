@@ -165,11 +165,12 @@
 - **호출 흐름**: Find Place from Text → Place Details (2단계)
 - **활용**: 시드 데이터 보충, 추후 자동 수집 파이프라인
 
-### Google Maps Embed API
+### Google Maps Embed API — ✅ 연동 완료
 
 - **용도**: 결과 카드/상세 페이지에 지도 표시
-- **현재**: placeholder (`shared/ui/MapEmbed.tsx`)
-- **구현 시**: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` 사용, iframe embed
+- **컴포넌트**: `shared/ui/MapEmbed.tsx` — `query`, `lat`, `lng` props로 좌표 기반 지도 렌더
+- **API**: `https://www.google.com/maps/embed/v1/place` iframe embed
+- **API 키**: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (없으면 플레이스홀더 폴백)
 
 ### 길안내 딥링크
 

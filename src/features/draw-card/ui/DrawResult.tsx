@@ -5,7 +5,7 @@ import { MapPin, RotateCcw } from "lucide-react";
 import type { Place } from "@/entities/place";
 import { getDirectionsUrl } from "@/entities/place";
 import { PlaceCard } from "@/entities/place/ui";
-import { Button } from "@/shared/ui";
+import { Button, MapEmbed } from "@/shared/ui";
 import { Link } from "@/i18n/navigation";
 
 interface DrawResultProps {
@@ -25,8 +25,8 @@ export function DrawResult({ place, onDrawAgain }: DrawResultProps) {
 
       <PlaceCard place={place} />
 
-      <div className="mt-4 rounded-xl border border-border overflow-hidden bg-muted h-[160px] flex items-center justify-center">
-        <span className="text-sm text-muted-foreground">Google Maps Embed</span>
+      <div className="mt-4">
+        <MapEmbed query={place.name_en} lat={place.latitude} lng={place.longitude} size="lg" />
       </div>
 
       <div className="mt-4 flex flex-col gap-3">
