@@ -2,11 +2,11 @@
 
 import { useState, useCallback } from "react";
 import type { DrawState } from "@/features/draw-card";
-import type { Category } from "@/shared/config";
+import type { Category, City } from "@/shared/config";
 import type { Place } from "@/entities/place";
-import { MOCK_PLACES } from "@/shared/mocks";
+import { drawRandomPlace } from "@/entities/place";
 
-export function useDrawState(initialCategory?: Category) {
+export function useDrawState(city: City = "SEOUL", initialCategory?: Category) {
   const [state, setState] = useState<DrawState>("select");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     initialCategory ?? null
@@ -18,18 +18,15 @@ export function useDrawState(initialCategory?: Category) {
 
     setState("shuffling");
 
-    // 목데이터에서 해당 카테고리 랜덤 선택
-    const candidates = MOCK_PLACES.filter(
-      (p) => p.category === selectedCategory
-    );
-    const pick = candidates[Math.floor(Math.random() * candidates.length)];
-
-    // 셔플 애니메이션 후 결과 표시
-    setTimeout(() => {
-      setResult(pick);
-      setState("result");
-    }, 2000);
-  }, [selectedCategory]);
+    // Supabase에서 가중치 기반 랜덤 장소 선택
+    drawRandomPlace(city, selectedCategory).then((place) => {
+      // 셔플 애니메이션 후 결과 표시
+      setTimeout(() => {
+        setResult(place);
+        setState("result");
+      }, 2000);
+    });
+  }, [selectedCategory, city]);
 
   const drawAgain = useCallback(() => {
     setResult(null);

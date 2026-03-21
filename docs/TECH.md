@@ -150,19 +150,20 @@
 
 ---
 
-## 외부 API 연동 계획
+## 외부 API 연동
 
-### 카카오 Local API
+### 카카오 Local API — ⏸ 보류 (Phase 2)
 
-- **용도**: 한국 로컬 장소 데이터 수집 (맛집, 관광지, 쇼핑)
-- **엔드포인트**: 키워드 검색, 카테고리 검색
-- **제한**: 일 10만 건 (무료)
-- **호출 방식**: Next.js Route Handler → 서버 사이드 호출 (API 키 보호)
+- **상태**: 비즈앱 심사 필요 → MVP에서는 사용하지 않음
+- **Route Handler**: `src/app/api/kakao/search/route.ts` (구현 완료, 심사 후 활성화)
+- **Phase 2**: 심사 통과 후 대량 장소 자동 수집용으로 연동
 
-### Google Places API
+### Google Places API — ✅ 연동 완료
 
-- **용도**: 카카오 데이터에 영문 정보 보충 (영문 이름, 영문 주소, 리뷰)
-- **호출 방식**: Next.js Route Handler → 서버 사이드 호출
+- **용도**: 영문 장소 정보 조회 (place_id, 영문 이름/주소, 영업시간, 사진, 설명)
+- **Route Handler**: `src/app/api/google/place-details/route.ts`
+- **호출 흐름**: Find Place from Text → Place Details (2단계)
+- **활용**: 시드 데이터 보충, 추후 자동 수집 파이프라인
 
 ### Google Maps Embed API
 
@@ -179,4 +180,13 @@
 
 ---
 
-*마지막 업데이트: 2026-03-22 (세션 #5 — DB 스키마, Supabase 연동, 길안내 딥링크)*
+## 데이터 연결 현황
+
+- **목데이터 → Supabase 전환 완료**: `useDrawState`와 `result/[id]/page.tsx`에서 Supabase 쿼리 사용
+- `useDrawState(city)`: `drawRandomPlace(city, category)` → 가중치 기반 랜덤 장소 선택
+- `result/[id]/page.tsx`: `getPlaceById(id)` → UUID로 장소 조회 (서버 컴포넌트)
+- 목데이터(`shared/mocks/`)는 아직 남아있으나 더 이상 참조하지 않음
+
+---
+
+*마지막 업데이트: 2026-03-22 (세션 #5 — Supabase 연동, 목데이터 교체, API Route Handler)*

@@ -22,25 +22,25 @@
 | 4 | RLS 정책 | 읽기 공개, 쓰기 제한 | anon 사용자 select 허용, insert/update는 대시보드/service_role만 |
 | 5 | 길안내 URL | Google Maps Directions 딥링크 | `google_maps_url` 대신 좌표 기반 directions URL 생성 |
 | 6 | 개발 플로우 | CLAUDE.md에 명시 | TECH/TODO/PRD/CHANGELOG 자동 업데이트 + 빌드 + 커밋 |
+| 7 | MVP 데이터 전략 변경 | 카카오 보류, Google Places + 시드 데이터 | 카카오 비즈앱 심사 필요 → Phase 2로 이동 |
 
 ### 완료 항목
 - `.vscode/` gitignore 추가
 - 모바일 반응형 점검: Header 언어 선택 hover → click 토글 변환 (모바일 터치 지원)
 - 길안내 버튼: `getDirectionsUrl()` 유틸 생성, Google Maps Directions 딥링크 적용
-- Supabase 스키마: `supabase/migrations/20260322_create_places.sql` (places 테이블 + 인덱스 + RLS + 트리거)
-- Supabase 클라이언트: `src/shared/api/supabase.ts`
-- 시드 데이터: `supabase/seed.sql` (서울 장소 15개)
-- Place API 쿼리: `src/entities/place/api/queries.ts` (getPlaces, getPlaceById, drawRandomPlace)
-- 외부 서비스 셋업 완료 (카카오, Google, Supabase 키 발급 + `.env.local` 등록)
+- Supabase 스키마: places 테이블 + 인덱스 + RLS + 트리거
+- Supabase 클라이언트 + Place API 쿼리 (getPlaces, getPlaceById, drawRandomPlace)
+- 시드 데이터 15개 Supabase 등록 완료
+- 외부 서비스 셋업 완료 (카카오, Google, Supabase 키 발급)
+- API Route Handler: 카카오 검색 (⏸ 심사 대기), Google Place Details (✅ 동작 확인)
+- **목데이터 → Supabase 전환 완료**: useDrawState, result/[id] 페이지 모두 실제 DB 연결
 
 ### PRD 변경 내역
 - Place 데이터 모델: `id` 타입 string → uuid, `created_at`/`updated_at` 필드 추가
+- 데이터 소싱 전략: MVP를 "시드 데이터 + Google Places" 방식으로 변경, 카카오는 Phase 2
 
 ### 다음 단계
-- [ ] Supabase에서 마이그레이션 + 시드 SQL 실행
-- [ ] 카카오 Local API 연동 테스트 (3-3)
-- [ ] Google Places API 영문 매칭 테스트 (3-4)
-- [ ] 목데이터를 실제 Supabase 데이터로 교체
+- [ ] Step 5 — 배포 & 런칭 (Vercel, SEO, GA, AdSense)
 
 ---
 

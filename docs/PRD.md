@@ -259,30 +259,32 @@
 
 ## 8. 데이터 소싱 전략
 
-### MVP: 카카오 Local API + Google Places API
+### MVP: 시드 데이터 + Google Places API
 
-**카카오 Local API (핵심 데이터 소스)**
-- 카테고리/키워드/좌표 기반 장소 검색
-- 한국 로컬 데이터 (맛집, 카페, 관광지) 가장 풍부
-- 무료 티어: 일 10만 건
-- 지도 표시에는 사용하지 않음 (데이터 소스 전용)
-- 주의: 이용약관에 따라 데이터 캐싱/저장 정책 확인 필요
+**시드 데이터 (핵심)**
+- 서울 장소 15개 수동 큐레이션 (FOOD 5, ATTRACTION 5, SHOPPING 5)
+- Supabase DB에 직접 저장, 대시보드로 관리
 
-**Google Places API (영문 데이터 보충)**
-- 카카오 데이터의 영문 이름/설명 매칭
-- 영문 리뷰, 사진 URL 보충
-- 영문 변환 방식: Google Places 매칭 우선, 부족 시 번역 API 또는 AI 번역
+**Google Places API (데이터 보충)**
+- place_id, 영문 주소, 영업시간, 사진 URL 자동 보충
+- `editorial_summary`로 영문 설명 참고
+- Route Handler로 서버 사이드 호출 (API 키 보호)
 
-**데이터 흐름:**
+**데이터 흐름 (MVP):**
 ```
-카카오 Local API → 한국어 장소 데이터 확보
+시드 데이터 (수동 큐레이션)
        ↓
-Google Places API → 영문 이름/설명 매칭 & 보충
+Google Places API → 영문 데이터 보충 (주소, 사진, 영업시간)
        ↓
 Supabase DB → 통합 장소 데이터 저장
        ↓
 P's Trip 카드 덱 → 사용자에게 결과 제공
 ```
+
+### Phase 2: 카카오 Local API + 대량 수집
+- 카카오 비즈앱 심사 통과 후 연동
+- 카테고리/키워드 기반 장소 자동 수집 → Google Places 영문 매칭 → Supabase 저장
+- 부산, 제주 등 도시 확장 시 대량 데이터 수집용
 
 ### Phase 2~3: 커뮤니티 기능 추가
 - 사용자가 장소를 직접 추천/제출
