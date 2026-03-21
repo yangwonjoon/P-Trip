@@ -1,44 +1,53 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Header } from "@/widgets/header";
+import { HeroSection } from "@/widgets/hero-section";
+import { ModeSelector } from "@/widgets/mode-selector";
+import { LocationSelector, useLocation } from "@/features/select-location";
 import { COPY } from "@/shared/config";
+import { CITIES } from "@/shared/config";
+import { Button } from "@/shared/ui";
+import type { DrawMode } from "@/features/draw-card";
 
 export default function Home() {
+  const { selectedCity, selectCity, detectLocation, isDetecting } =
+    useLocation();
+  const [selectedMode, setSelectedMode] = useState<DrawMode>("category");
+
+  const cityLabel = CITIES.find((c) => c.key === selectedCity)?.label;
+
   return (
-    <main className="flex-1">
-      {/* Hero */}
-      <section className="bg-[var(--pt-purple-dark)] text-white px-6 py-12 text-center">
-        <div className="w-[120px] h-[120px] rounded-full bg-white/10 mx-auto mb-6 flex items-center justify-center text-4xl">
-          👹
-        </div>
-        <p className="text-sm text-white/70 mb-1">{COPY.hero.title}</p>
-        <h1 className="text-xl font-bold mb-2">{COPY.hero.subtitle}</h1>
-        <p className="text-sm text-white/60">{COPY.hero.tagline}</p>
-        <div className="flex justify-center gap-2 mt-4">
-          <span className="text-xs bg-white/10 rounded-full px-3 py-1">🍲 food</span>
-          <span className="text-xs bg-white/10 rounded-full px-3 py-1">🏯 spots</span>
-          <span className="text-xs bg-white/10 rounded-full px-3 py-1">🛍 shop</span>
-        </div>
-      </section>
+    <>
+      <Header city={cityLabel} />
+      <main className="flex-1 max-w-md mx-auto w-full">
+        <HeroSection />
 
-      {/* Location */}
-      <section className="px-6 py-8">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
-          {COPY.location.sectionLabel}
-        </p>
-        <p className="text-center text-sm text-muted-foreground mt-4 mb-4">
-          {COPY.location.orPickCity}
-        </p>
-      </section>
+        <LocationSelector
+          selectedCity={selectedCity}
+          onSelectCity={selectCity}
+          onDetectLocation={detectLocation}
+          isDetecting={isDetecting}
+        />
 
-      {/* Mode select */}
-      <section className="px-6 pb-8">
-        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">
-          {COPY.mode.sectionLabel}
-        </p>
-      </section>
+        <ModeSelector
+          selectedMode={selectedMode}
+          onSelectMode={setSelectedMode}
+        />
 
-      {/* CTA */}
-      <section className="px-6 pb-8 text-center">
-        <p className="text-xs text-muted-foreground mt-4">{COPY.footer}</p>
-      </section>
-    </main>
+        {/* CTA */}
+        <section className="px-6 pb-8">
+          <Link href={`/draw?city=${selectedCity}&mode=${selectedMode}`}>
+            <Button className="w-full h-12 text-base font-semibold bg-[var(--pt-purple)] hover:bg-[var(--pt-purple)]/90">
+              {COPY.actions.shuffleAndDraw}
+            </Button>
+          </Link>
+          <p className="text-center text-xs text-muted-foreground mt-4">
+            {COPY.footer}
+          </p>
+        </section>
+      </main>
+    </>
   );
 }
