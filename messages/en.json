@@ -7,8 +7,11 @@
   "location": {
     "sectionLabel": "WHERE ARE YOU?",
     "useMyLocation": "Use my location",
-    "orPickCity": "or pick a city",
-    "detecting": "Detecting..."
+    "detecting": "Detecting...",
+    "detected": "Location detected",
+    "nearMe": "Near me",
+    "fallback": "Using default location (Seoul)",
+    "fallbackHint": "Tap to try again or allow location access"
   },
   "mode": {
     "sectionLabel": "PICK YOUR VIBE",
@@ -42,7 +45,7 @@
     "shuffleAndDraw": "Shuffle & draw 🃏",
     "viewDetails": "View details"
   },
-  "empty": "Even the Dokkaebi needs a moment. Try another city!",
+  "empty": "Even the Dokkaebi needs a moment. Try another area!",
   "footer": "Plans? The Dokkaebi doesn't know that word.",
   "categories": {
     "FOOD": {

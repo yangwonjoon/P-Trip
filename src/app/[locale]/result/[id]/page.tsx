@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/widgets/header";
 import { ResultDetail } from "@/widgets/result-detail";
-import { MOCK_PLACES } from "@/shared/mocks";
+import { getPlaceById } from "@/entities/place";
 
 export default async function ResultPage({
   params,
@@ -10,7 +10,7 @@ export default async function ResultPage({
   params: Promise<{ id: string; locale: string }>;
 }) {
   const { id } = await params;
-  const place = MOCK_PLACES.find((p) => p.id === id);
+  const place = await getPlaceById(id);
 
   if (!place) {
     notFound();

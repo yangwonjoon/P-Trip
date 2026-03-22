@@ -7,8 +7,11 @@
   "location": {
     "sectionLabel": "你在哪里？",
     "useMyLocation": "使用我的位置",
-    "orPickCity": "或选择一个城市",
-    "detecting": "定位中..."
+    "detecting": "定位中...",
+    "detected": "位置已检测",
+    "nearMe": "我附近",
+    "fallback": "使用默认位置（首尔）",
+    "fallbackHint": "再试一次或允许位置访问"
   },
   "mode": {
     "sectionLabel": "选个风格",
@@ -42,7 +45,7 @@
     "shuffleAndDraw": "洗牌 & 抽卡 🃏",
     "viewDetails": "查看详情"
   },
-  "empty": "Dokkaebi也需要休息一下。试试其他城市吧！",
+  "empty": "Dokkaebi也需要休息一下。试试其他地方吧！",
   "footer": "计划？Dokkaebi不认识这个词。",
   "categories": {
     "FOOD": {

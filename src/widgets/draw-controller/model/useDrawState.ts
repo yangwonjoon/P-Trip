@@ -2,34 +2,35 @@
 
 import { useState, useCallback } from "react";
 import type { DrawState } from "@/features/draw-card";
-import type { Category } from "@/shared/config";
+import type { Category, Coordinates } from "@/shared/config";
+import { FALLBACK_COORDS, getRadiusForLocation } from "@/shared/config";
 import type { Place } from "@/entities/place";
-import { MOCK_PLACES } from "@/shared/mocks";
+import { drawNearbyRandomPlace } from "@/entities/place";
 
-export function useDrawState(initialCategory?: Category) {
+export function useDrawState(coords?: Coordinates, initialCategory?: Category) {
   const [state, setState] = useState<DrawState>("select");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     initialCategory ?? null
   );
   const [result, setResult] = useState<Place | null>(null);
 
+  const userCoords = coords ?? FALLBACK_COORDS;
+  const radius = getRadiusForLocation(userCoords);
+
   const startShuffle = useCallback(() => {
     if (!selectedCategory) return;
 
     setState("shuffling");
 
-    // 목데이터에서 해당 카테고리 랜덤 선택
-    const candidates = MOCK_PLACES.filter(
-      (p) => p.category === selectedCategory
-    );
-    const pick = candidates[Math.floor(Math.random() * candidates.length)];
-
-    // 셔플 애니메이션 후 결과 표시
-    setTimeout(() => {
-      setResult(pick);
-      setState("result");
-    }, 2000);
-  }, [selectedCategory]);
+    // 위치 기반 동적 반경 내 가중치 랜덤 장소 선택
+    drawNearbyRandomPlace(userCoords, selectedCategory, radius).then((place) => {
+      // 셔플 애니메이션 후 결과 표시
+      setTimeout(() => {
+        setResult(place);
+        setState("result");
+      }, 2000);
+    });
+  }, [selectedCategory, userCoords, radius]);
 
   const drawAgain = useCallback(() => {
     setResult(null);

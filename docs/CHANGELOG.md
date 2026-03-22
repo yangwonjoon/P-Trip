@@ -5,6 +5,96 @@
 
 ---
 
+## 2026-03-22 | 세션 #6 — 좌표 기반 반경 검색 전환
+
+### 논의 배경
+- 도시 3개(서울/부산/제주) 고정 선택 방식의 한계: 파주/고양 등 도시 외곽에서 항상 서울만 노출
+- 사용자 실제 위치 기반으로 근처 장소를 자연스럽게 추천하도록 개선 필요
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 위치 감지 방식 | 브라우저 Geolocation → 좌표 저장 | 기존 도시 선택 제거 |
+| 2 | 장소 검색 방식 | Haversine 반경 40km | Supabase RPC 함수 |
+| 3 | 폴백 좌표 | 서울 시청 (37.5665, 126.978) | 위치 거부/에러 시 |
+| 4 | URL 파라미터 | `?lat=X&lng=Y&mode=category` | 기존 `?city=SEOUL` 대체 |
+
+### 완료 항목
+- Supabase RPC 함수 `get_nearby_places` 마이그레이션 작성 (Haversine 거리 계산)
+- `useLocation` 훅: 실제 좌표 저장 + 자동 감지 + 에러 폴백
+- `LocationSelector` UI: 도시 선택 버튼 제거, 위치 감지 상태 표시로 간소화
+- `queries.ts`: `getNearbyPlaces`, `drawNearbyRandomPlace` 반경 기반 함수로 전환
+- `useDrawState`, `DrawController`: city → coordinates 파라미터 전환
+- 랜딩/드로우 페이지: URL 파라미터 lat/lng 전달
+- 4개 언어 메시지 파일 업데이트 (detected, nearMe, fallback 등 키 추가)
+- lat/lng 인덱스 추가 (`idx_places_lat_lng`)
+
+### 다음 단계 (세션 #7)
+- [ ] Supabase에 RPC 함수 실행 (대시보드 SQL Editor)
+- [ ] 부산/제주 외 지역 장소 데이터 추가
+- [ ] Step 5 — 배포 & 런칭 (Vercel, SEO, GA, AdSense)
+
+---
+
+## 2026-03-22 | 세션 #5 — UI 마무리 + DB 스키마 + Supabase 연동
+
+### 논의 배경
+- Step 4 UI 개발 완료 후 마무리 작업 (반응형, 길안내 버튼) 진행
+- Yang이 외부 서비스 키 발급 완료 → Step 3 (DB & 데이터) 착수
+- 개발 플로우 규칙 정비 (문서 자동 업데이트 + 커밋)
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | Place id 타입 | UUID (auto-generated) | PostgreSQL `gen_random_uuid()` |
+| 2 | enum 구현 방식 | text + CHECK 제약조건 | enum 타입 대신 — 마이그레이션 유연성 |
+| 3 | 배열 필드 | PostgreSQL `text[]` | images, tags |
+| 4 | RLS 정책 | 읽기 공개, 쓰기 제한 | anon 사용자 select 허용, insert/update는 대시보드/service_role만 |
+| 5 | 길안내 URL | Google Maps Directions 딥링크 | `google_maps_url` 대신 좌표 기반 directions URL 생성 |
+| 6 | 개발 플로우 | CLAUDE.md에 명시 | TECH/TODO/PRD/CHANGELOG 자동 업데이트 + 빌드 + 커밋 |
+| 7 | MVP 데이터 전략 변경 | 카카오 보류, Google Places + 시드 데이터 | 카카오 비즈앱 심사 필요 → Phase 2로 이동 |
+
+### 완료 항목
+- `.vscode/` gitignore 추가
+- 모바일 반응형 점검: Header 언어 선택 hover → click 토글 변환 (모바일 터치 지원)
+- 길안내 버튼: `getDirectionsUrl()` 유틸 생성, Google Maps Directions 딥링크 적용
+- Supabase 스키마: places 테이블 + 인덱스 + RLS + 트리거
+- Supabase 클라이언트 + Place API 쿼리 (getPlaces, getPlaceById, drawRandomPlace)
+- 시드 데이터 15개 Supabase 등록 완료
+- 외부 서비스 셋업 완료 (카카오, Google, Supabase 키 발급)
+- API Route Handler: 카카오 검색 (⏸ 심사 대기), Google Place Details (✅ 동작 확인)
+- **목데이터 → Supabase 전환 완료**: useDrawState, result/[id] 페이지 모두 실제 DB 연결
+- **Google Maps Embed API 연동**: MapEmbed 플레이스홀더 → 실제 iframe 지도 표시
+
+### PRD 변경 내역
+- Place 데이터 모델: `id` 타입 string → uuid, `created_at`/`updated_at` 필드 추가
+- 데이터 소싱 전략: MVP를 "시드 데이터 + Google Places" 방식으로 변경, 카카오는 Phase 2
+
+### 다음 단계 (세션 #6)
+- [ ] Step 5 — 배포 & 런칭 (Vercel, SEO, GA, AdSense)
+
+---
+
+## 2026-03-21 | 세션 #4 — UI 개발 완료 + 다국어 지원
+
+### 논의 배경
+- Step 4 UI 개발 (목데이터 기반) 전체 진행
+- i18n (다국어 지원) Phase 2 항목이었으나 조기 적용
+
+### 완료 항목
+- 전체 UI 컴포넌트 구현 (Step 4A~4D: Header, HeroSection, LocationSelector, ModeSelector, CategorySelect, ShuffleAnimation, DrawResult, DrawController, PlaceCard, PlaceHero, PlaceInfo, PlaceDetails, DokkaebiTip, MapEmbed, ResultDetail)
+- 3개 페이지 조합 완료 (랜딩, 카드 드로우, 결과 상세)
+- next-intl 기반 다국어 지원 (en, ko, ja, zh)
+- `[locale]` 라우팅 + 브라우저 언어 자동 감지
+
+### 다음 단계 (예정)
+- [ ] UI 마무리 (반응형 점검, 길안내 버튼) → 세션 #5에서 완료
+- [ ] 외부 서비스 셋업 → 세션 #5에서 완료
+
+---
+
 ## 2026-03-21 | 세션 #3 — 프로젝트 셋업 & FSD 아키텍처 도입
 
 ### 논의 배경

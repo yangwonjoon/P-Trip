@@ -24,7 +24,7 @@ export function ResultDetail({ place }: ResultDetailProps) {
         <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
           {t("placeDetails.location")}
         </p>
-        <MapEmbed size="lg" />
+        <MapEmbed query={place.name_en} lat={place.latitude} lng={place.longitude} size="lg" />
       </div>
 
       <div className="px-6 mt-6 flex flex-col gap-3">

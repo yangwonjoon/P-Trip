@@ -7,8 +7,11 @@
   "location": {
     "sectionLabel": "지금 어디에 있어?",
     "useMyLocation": "내 위치 사용",
-    "orPickCity": "또는 도시를 선택하세요",
-    "detecting": "감지 중..."
+    "detecting": "감지 중...",
+    "detected": "위치 감지 완료",
+    "nearMe": "내 주변",
+    "fallback": "기본 위치 사용 중 (서울)",
+    "fallbackHint": "다시 시도하거나 위치 접근을 허용해 주세요"
   },
   "mode": {
     "sectionLabel": "뭐가 끌려?",
@@ -42,7 +45,7 @@
     "shuffleAndDraw": "셔플 & 뽑기 🃏",
     "viewDetails": "상세 보기"
   },
-  "empty": "도깨비도 잠깐 쉬어야 해. 다른 도시를 골라봐!",
+  "empty": "도깨비도 잠깐 쉬어야 해. 다른 곳에서 시도해 봐!",
   "footer": "계획? 도깨비는 그런 거 모름.",
   "categories": {
     "FOOD": {

@@ -7,8 +7,11 @@
   "location": {
     "sectionLabel": "今どこにいる？",
     "useMyLocation": "現在地を使う",
-    "orPickCity": "または都市を選んでね",
-    "detecting": "検出中..."
+    "detecting": "検出中...",
+    "detected": "位置を検出しました",
+    "nearMe": "近くのスポット",
+    "fallback": "デフォルト位置を使用中（ソウル）",
+    "fallbackHint": "もう一度試すか、位置情報を許可してください"
   },
   "mode": {
     "sectionLabel": "気分はどれ？",
@@ -42,7 +45,7 @@
     "shuffleAndDraw": "シャッフル＆ドロー 🃏",
     "viewDetails": "詳細を見る"
   },
-  "empty": "トッケビもちょっと休憩。他の都市を試してみて！",
+  "empty": "トッケビもちょっと休憩。他のエリアを試してみて！",
   "footer": "計画？トッケビはそんな言葉知らない。",
   "categories": {
     "FOOD": {

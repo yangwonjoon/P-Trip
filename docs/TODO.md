@@ -1,16 +1,15 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-21 (세션 #4 — UI 개발 완료)
+> 마지막 업데이트: 2026-03-22 (세션 #6 — 좌표 기반 반경 검색 전환)
 
 ---
 
-## 현재 단계: 🎨 UI 개발 + 🔑 외부 서비스 셋업
+## 현재 단계: 🚀 배포 & 런칭 (Step 5)
 
-프로젝트 초기화 & FSD 아키텍처 완료 → **UI 개발 (Claude) + API 키 발급 (Yang) 병렬 진행**
+Step 1~4 완료, Step 3 DB 연동 완료 → **Step 5 (Vercel 배포 + SEO + 분석) 진행**
 
-### 지금 진행 중인 것
-- **Yang**: Step 2 — 카카오/Google/Supabase API 키 발급 중
-- **Claude**: Step 4 — ✅ 목데이터 기반 UI 개발 완료 (세션 #4)
+### 다음 할 일
+- **Step 5**: Vercel 배포 → 환경변수 등록 → SEO → GA → AdSense
 
 ---
 
@@ -29,12 +28,12 @@
 
 | # | 태스크 | 어디서 | 비고 | 상태 |
 |---|--------|--------|------|------|
-| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | 🔄 |
-| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | 🔄 |
-| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | 🔄 |
-| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | 🔄 |
-| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | 🔄 |
-| 2-6 | `.env.local` 파일에 키 등록 | 로컬 | 아래 env 템플릿 참고 | ⬜ |
+| 2-1 | 카카오 개발자 앱 생성 & REST API 키 발급 | [developers.kakao.com](https://developers.kakao.com) | Local API용, 무료 일 10만건 | ✅ |
+| 2-2 | Google Cloud 프로젝트 생성 | [console.cloud.google.com](https://console.cloud.google.com) | — | ✅ |
+| 2-3 | Google Maps Embed API 키 발급 | Google Cloud Console | MVP 지도용 | ✅ |
+| 2-4 | Google Places API 키 발급 | Google Cloud Console | 영문 데이터 보충용 | ✅ |
+| 2-5 | Supabase 프로젝트 생성 | [supabase.com](https://supabase.com) | 무료 티어, URL + anon key 필요 | ✅ |
+| 2-6 | `.env.local` 파일에 키 등록 | 로컬 | 아래 env 템플릿 참고 | ✅ |
 
 ### `.env.local` 템플릿
 ```
@@ -55,11 +54,12 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | 필요한 것 | 상태 |
 |---|--------|-----------|------|
-| 3-1 | Supabase DB 스키마 생성 (places 테이블) | 2-5 완료 | ⬜ |
-| 3-2 | 시드 데이터 준비 (서울 장소 10~20개, 수동 입력) | 3-1 완료 | ⬜ |
-| 3-3 | 카카오 Local API 연동 테스트 | 2-1 완료 | ⬜ |
-| 3-4 | Google Places API 영문 매칭 테스트 | 2-4 완료 | ⬜ |
-| 3-5 | 데이터 파이프라인 스크립트 (카카오→영문변환→Supabase) | 3-3, 3-4 완료 | ⬜ |
+| 3-1 | Supabase DB 스키마 생성 (places 테이블) | 2-5 완료 | ✅ |
+| 3-2 | 시드 데이터 준비 (서울 장소 15개) | 3-1 완료 | ✅ |
+| 3-3 | 카카오 Local API 연동 테스트 | 비즈앱 심사 필요 | ⏸ |
+| 3-4 | Google Places API 영문 매칭 테스트 | 2-4 완료 | ✅ |
+| 3-5 | 데이터 파이프라인 스크립트 (카카오→영문변환→Supabase) | 3-3 보류로 후순위 | ⏸ |
+| 3-6 | 목데이터 → Supabase 실제 데이터 연결 | 3-1, 3-2 완료 | ✅ |
 
 ## Step 4 — UI 개발 (MVP 핵심, 목데이터로 진행)
 
@@ -79,7 +79,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 | # | 태스크 | FSD 위치 | 참고 | 상태 |
 |---|--------|----------|------|------|
 | 4-3 | HeroSection 위젯 (도깨비 플레이스홀더 + 카피) | `widgets/hero-section/` | WIREFRAME.md §1 히어로 | ✅ |
-| 4-4 | 위치 설정 feature (자동감지 + 도시 카드 3개) | `features/select-location/` | WIREFRAME.md §1 위치 | ✅ |
+| 4-4 | 위치 설정 feature (좌표 기반 자동감지) | `features/select-location/` | 반경 40km 검색 | ✅ |
 | 4-5 | 모드 선택 카드 (Category / Mix / Course) | `widgets/mode-selector/` | WIREFRAME.md §1 모드 | ✅ |
 | 4-6 | 랜딩 페이지 조합 (위 위젯들 + CTA) | `app/page.tsx` | — | ✅ |
 
@@ -106,8 +106,8 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | 비고 | 상태 |
 |---|--------|------|------|
-| 4-16 | 모바일 반응형 점검 (390px 기준) | 전체 페이지 | ⬜ |
-| 4-17 | 길안내 버튼 (구글맵 딥링크) | 공통 | ⬜ |
+| 4-16 | 모바일 반응형 점검 (390px 기준) | 전체 페이지 | ✅ |
+| 4-17 | 길안내 버튼 (구글맵 딥링크) | 공통 | ✅ |
 
 ## Step 5 — 배포 & 런칭
 
@@ -148,7 +148,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 - [ ] 하루 코스 생성기 (`/course`) + Google Maps JavaScript API
 - [ ] 소셜 공유 (OG 메타 + 공유 버튼)
 - [ ] 장소 데이터 확장 (부산, 제주)
-- [ ] 위치 기반 거리순 정렬
+- [x] 위치 기반 거리순 정렬 (좌표 기반 반경 검색으로 전환)
 - [ ] 관리자 가중치 설정
 - [ ] 사용자 계정 + 커뮤니티 (Phase 3)
 

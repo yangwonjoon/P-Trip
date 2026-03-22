@@ -1,25 +1,25 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { MapPin } from "lucide-react";
-import { CITIES } from "@/shared/config";
-import type { City } from "@/shared/config";
+import { MapPin, RotateCw } from "lucide-react";
 import { cn } from "@/shared/lib";
+import type { Coordinates } from "@/shared/config";
 
 interface LocationSelectorProps {
-  selectedCity: City;
-  onSelectCity: (city: City) => void;
+  coordinates: Coordinates | null;
   onDetectLocation: () => void;
   isDetecting: boolean;
+  hasError: boolean;
 }
 
 export function LocationSelector({
-  selectedCity,
-  onSelectCity,
+  coordinates,
   onDetectLocation,
   isDetecting,
+  hasError,
 }: LocationSelectorProps) {
   const t = useTranslations();
+  const isDetected = coordinates !== null && !isDetecting;
 
   return (
     <section className="px-6 py-8">
@@ -32,47 +32,43 @@ export function LocationSelector({
         disabled={isDetecting}
         className={cn(
           "w-full flex items-center justify-center gap-2 py-3 rounded-xl",
-          "border-2 border-[var(--pt-teal)] bg-[var(--pt-teal)]/5",
-          "text-[var(--pt-teal)] text-sm font-medium",
-          "hover:bg-[var(--pt-teal)]/10 transition-colors",
-          "disabled:opacity-50"
+          "border-2 transition-colors",
+          "disabled:opacity-50",
+          isDetected && !hasError
+            ? "border-[var(--pt-teal)] bg-[var(--pt-teal)]/10 text-[var(--pt-teal)]"
+            : hasError
+              ? "border-amber-400 bg-amber-400/5 text-amber-600"
+              : "border-[var(--pt-teal)] bg-[var(--pt-teal)]/5 text-[var(--pt-teal)]"
         )}
       >
-        <MapPin className="w-4 h-4" />
-        {isDetecting ? t("location.detecting") : t("location.useMyLocation")}
+        {isDetecting ? (
+          <>
+            <RotateCw className="w-4 h-4 animate-spin" />
+            <span className="text-sm font-medium">{t("location.detecting")}</span>
+          </>
+        ) : isDetected && !hasError ? (
+          <>
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-medium">{t("location.detected")}</span>
+          </>
+        ) : hasError ? (
+          <>
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-medium">{t("location.fallback")}</span>
+          </>
+        ) : (
+          <>
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-medium">{t("location.useMyLocation")}</span>
+          </>
+        )}
       </button>
 
-      <p className="text-center text-xs text-muted-foreground my-4">
-        {t("location.orPickCity")}
-      </p>
-
-      <div className="grid grid-cols-3 gap-3">
-        {CITIES.map((city) => {
-          const isSelected = selectedCity === city.key;
-          return (
-            <button
-              key={city.key}
-              onClick={() => onSelectCity(city.key)}
-              className={cn(
-                "flex flex-col items-center gap-1 py-4 rounded-xl border-2 transition-all",
-                isSelected
-                  ? "border-[var(--pt-purple)] bg-[var(--pt-purple-light)]"
-                  : "border-border hover:border-[var(--pt-purple)]/30"
-              )}
-            >
-              <span className="text-2xl">{city.emoji}</span>
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  isSelected ? "text-[var(--pt-purple)]" : "text-foreground"
-                )}
-              >
-                {t(`cities.${city.key}`)}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      {hasError && (
+        <p className="text-center text-xs text-muted-foreground mt-2">
+          {t("location.fallbackHint")}
+        </p>
+      )}
     </section>
   );
 }

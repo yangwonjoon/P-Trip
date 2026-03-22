@@ -3,9 +3,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CategorySelect } from "@/features/select-category";
 import { ShuffleAnimation, DrawResult } from "@/features/draw-card";
+import type { Coordinates } from "@/shared/config";
 import { useDrawState } from "../model";
 
-export function DrawController() {
+interface DrawControllerProps {
+  coordinates?: Coordinates;
+}
+
+export function DrawController({ coordinates }: DrawControllerProps) {
   const {
     state,
     selectedCategory,
@@ -13,7 +18,7 @@ export function DrawController() {
     result,
     startShuffle,
     drawAgain,
-  } = useDrawState();
+  } = useDrawState(coordinates);
 
   return (
     <AnimatePresence mode="wait">
