@@ -42,9 +42,10 @@ export function useLocation() {
     );
   }, []);
 
-  // 첫 렌더링 시 자동 위치 감지
+  // 첫 렌더링 시 자동 위치 감지 — 마운트 후 비동기로 실행하여 cascading render 방지
   useEffect(() => {
-    detectLocation();
+    const timer = setTimeout(detectLocation, 0);
+    return () => clearTimeout(timer);
   }, [detectLocation]);
 
   return { coordinates, detectLocation, isDetecting, hasError };
