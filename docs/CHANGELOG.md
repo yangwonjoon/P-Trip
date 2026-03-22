@@ -5,6 +5,33 @@
 
 ---
 
+## 2026-03-22 | 세션 #9 — 문서 source of truth 정리
+
+### 논의 배경
+- `AGENTS.md`와 `docs/TODO.md`/`docs/TECH.md`에 진행 상태가 중복 기록되기 시작함
+- 같은 정보를 여러 문서에 적다 보니 세션 기준이 어긋날 위험이 생김
+- Claude Code와 Codex가 같은 저장소 문서를 읽을 때 기준 문서가 더 명확할 필요가 있음
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 진행 상태 기록 위치 | `AGENTS.md`에서 제거 | 중복 상태 관리 방지 |
+| 2 | 현재 상태 기준 | `docs/TODO.md` | 단계, 우선순위, 완료 여부 |
+| 3 | 세션 이력 기준 | `docs/CHANGELOG.md` | 최신 세션 번호도 여기 기준 |
+| 4 | 기술 결정 기준 | `docs/TECH.md` | 구현 배경/아키텍처 설명 |
+
+### 완료 항목
+- `AGENTS.md`의 "현재 진행 상황" 섹션 제거
+- `AGENTS.md`에 문서별 source of truth 역할 명시
+- CHANGELOG 세션 번호 기준을 `docs/CHANGELOG.md`로 통일
+
+### 다음 단계 (세션 #10)
+- [ ] Supabase SQL Editor에서 마이그레이션 실행 (city CHECK 제거 + 백필)
+- [ ] pipeline:discover로 부산/제주 후보 수집
+- [ ] pipeline:generate로 콘텐츠 작성 시작
+- [ ] SEO 메타태그 설정
+
 ## 2026-03-22 | 세션 #8 — 데이터 파이프라인 개선
 
 ### 논의 배경

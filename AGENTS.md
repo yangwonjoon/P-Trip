@@ -21,8 +21,12 @@
 
 - PRD 내용이 변경되면: `docs/PRD.md` 업데이트 + `docs/CHANGELOG.md`에 변경 내역 추가를 **반드시 함께** 수행
 - CHANGELOG는 최신 항목이 맨 위에 오도록 역순으로 기록
-- CHANGELOG 작성 시 세션 번호를 이어서 매김 (현재 세션 #7까지 완료)
+- CHANGELOG 작성 시 세션 번호를 이어서 매김 (최신 세션 번호는 `docs/CHANGELOG.md` 기준)
 - 와이어프레임 변경 시 `docs/WIREFRAME.md`도 함께 업데이트
+- 진행 상태의 source of truth는 아래 문서를 따른다:
+  - 현재 할 일 / 완료 상태 / 우선순위: `docs/TODO.md`
+  - 세션별 변경 이력 / 의사결정: `docs/CHANGELOG.md`
+  - 기술 선택 / 아키텍처 결정 / 구현 배경: `docs/TECH.md`
 
 ## 개발 플로우
 
@@ -323,16 +327,10 @@ interface Place {
 - 톤: 캐주얼, P성향 유머, 도깨비 캐릭터 톤
 - 상세 브랜딩 가이드는 `docs/PRD.md` 섹션 3.6 참고
 
-## 현재 진행 상황
+## 진행 상태 확인
 
-- [x] PRD 작성 & 미결 사항 확정 (세션 #1)
-- [x] 와이어프레임 / UI 설계 (세션 #2)
-- [x] Next.js 프로젝트 초기화 + FSD 아키텍처 (세션 #3)
-- [x] UI 개발 완료 + 다국어 지원 (세션 #4)
-- [x] DB 스키마 + Supabase 연동 + API 키 발급 (세션 #5)
-- [x] 좌표 기반 반경 검색 전환 (세션 #6)
-- [x] Vercel 배포 + CI/CD + 브랜치 워크플로우 (세션 #7)
-- [ ] SEO 메타태그 설정
-- [ ] Google Analytics 연동
-- [ ] Google AdSense 연동
-- [ ] 도깨비 마스코트 일러스트 제작
+현재 진행 상황은 이 문서에 중복 기록하지 않는다. 최신 상태는 아래 문서를 기준으로 확인한다.
+
+- `docs/TODO.md` — 현재 단계, 남은 작업, 완료 여부
+- `docs/CHANGELOG.md` — 세션별 변경 내역, 다음 단계
+- `docs/TECH.md` — 확정된 기술/데이터/아키텍처 결정 사항
