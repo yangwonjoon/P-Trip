@@ -30,14 +30,29 @@
 
 main 브랜치는 **프로덕션 배포 브랜치**. 직접 push 금지, 반드시 PR을 통해 머지한다.
 
-1. **브랜치 생성** — 작업 목적 단위로 브랜치 생성
+1. **main 동기화** (브랜치 생성 전 필수) — 아래를 반드시 수행 후 브랜치 생성
+   ```bash
+   git checkout main && git pull origin main && git fetch --prune
+   # 머지 완료된 로컬 브랜치가 있으면 삭제
+   git branch --merged main | grep -v main | xargs -r git branch -d
+   ```
+2. **브랜치 생성** — 동기화된 main에서 작업 목적 단위로 브랜치 생성
    - 네이밍: `feat/기능명`, `fix/버그명`, `refactor/대상`, `docs/문서명`, `chore/설정명`
    - 예: `feat/seo-metadata`, `fix/shuffle-animation`, `chore/ci-setup`
-2. **작업 & 커밋** — 브랜치에서 작업, 기존 커밋 컨벤션대로 커밋
-3. **PR 생성** — `gh pr create`로 PR 생성 (PR 템플릿 자동 적용)
-4. **CI 통과** — GitHub Actions가 자동으로 lint + build 체크
-5. **머지** — CI 통과 후 squash merge (`gh pr merge --squash --delete-branch`)
-6. **자동 배포** — main 머지 시 Vercel이 자동으로 프로덕션 배포
+3. **작업 & 커밋** — 브랜치에서 작업, 기존 커밋 컨벤션대로 커밋
+4. **PR 생성** — `gh pr create`로 PR 생성 (PR 템플릿 자동 적용)
+5. **CI 통과** — GitHub Actions가 자동으로 lint + build 체크
+6. **머지** — CI 통과 후 squash merge (`gh pr merge --squash --delete-branch`)
+7. **자동 배포** — main 머지 시 Vercel이 자동으로 프로덕션 배포
+
+### 이전 PR이 아직 머지되지 않은 경우
+
+PR을 올렸지만 머지 전에 새 작업을 시작해야 할 때:
+
+- **독립적인 작업** → main에서 새 브랜치 생성하여 작업 (병렬 진행)
+- **이전 PR에 의존하는 작업** → 이전 브랜치에서 새 브랜치 생성 (`git checkout -b feat/new-feature 이전-브랜치`)
+  - 이전 PR 머지 후, 새 브랜치에서 `git rebase main`으로 베이스 갱신
+- 새 작업 시작 전 항상 `gh pr list`로 열린 PR 상태 확인
 
 ### 작업 완료 시 자동 수행 항목
 
