@@ -6,7 +6,7 @@ create table if not exists places (
   name_en text not null,
   name_ko text not null,
   category text not null check (category in ('FOOD', 'ATTRACTION', 'SHOPPING')),
-  city text not null check (city in ('SEOUL', 'BUSAN', 'JEJU')),
+  city text not null,  -- 시 단위 자유 텍스트 (SEOUL, PAJU, GOYANG, BUSAN, JEJU 등)
   description text not null,
   description_long text,
   images text[] default '{}',
