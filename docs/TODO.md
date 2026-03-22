@@ -1,15 +1,15 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-22 (세션 #6 — 좌표 기반 반경 검색 전환)
+> 마지막 업데이트: 2026-03-22 (세션 #7 — CI/CD + 브랜치 워크플로우 구축)
 
 ---
 
 ## 현재 단계: 🚀 배포 & 런칭 (Step 5)
 
-Step 1~4 완료, Step 3 DB 연동 완료 → **Step 5 (Vercel 배포 + SEO + 분석) 진행**
+Step 1~4 완료, Step 3 DB 연동 완료, 배포 완료 → **Step 5 나머지 (SEO + 분석) 진행**
 
 ### 다음 할 일
-- **Step 5**: Vercel 배포 → 환경변수 등록 → SEO → GA → AdSense
+- **Step 5**: SEO 메타태그 → GA → AdSense
 
 ---
 
@@ -113,12 +113,14 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 | # | 태스크 | 필요한 것 | 상태 |
 |---|--------|-----------|------|
-| 5-1 | Vercel 프로젝트 연결 & 첫 배포 | Vercel 계정 | ⬜ |
-| 5-2 | 환경변수 Vercel에 등록 | 2-6의 키들 | ⬜ |
-| 5-3 | 기본 SEO 설정 (메타태그, OG) | — | ⬜ |
-| 5-4 | Google Analytics 연동 | GA 계정 | ⬜ |
-| 5-5 | Google AdSense 연동 | AdSense 승인 필요 | ⬜ |
-| 5-6 | 커스텀 도메인 연결 (선택) | 도메인 구매 | ⬜ |
+| 5-1 | Vercel 프로젝트 연결 & 첫 배포 | Vercel 계정 | ✅ |
+| 5-2 | 환경변수 Vercel에 등록 | 2-6의 키들 | ✅ |
+| 5-3 | GitHub Actions CI (lint + build) | — | ✅ |
+| 5-4 | PR 템플릿 + 브랜치 보호 규칙 | — | ✅ |
+| 5-5 | 기본 SEO 설정 (메타태그, OG) | — | ⬜ |
+| 5-6 | Google Analytics 연동 | GA 계정 | ⬜ |
+| 5-7 | Google AdSense 연동 | AdSense 승인 필요 | ⬜ |
+| 5-8 | 커스텀 도메인 연결 (선택) | 도메인 구매 | ⬜ |
 
 ---
 

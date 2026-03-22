@@ -226,4 +226,33 @@
 
 ---
 
-*마지막 업데이트: 2026-03-22 (세션 #6 — 좌표 기반 반경 검색 전환)*
+## CI/CD
+
+### GitHub Actions CI
+
+- **트리거**: PR → main 브랜치
+- **워크플로우**: `.github/workflows/ci.yml`
+- **체크 항목**: `npm run lint` → `npm run build`
+- **Node 버전**: 22
+- **환경변수**: GitHub Secrets에서 주입 (빌드 시 필요한 API 키들)
+
+### Vercel CD
+
+- **프로덕션 배포**: main 브랜치 머지 시 자동 배포
+- **프리뷰 배포**: PR 생성/업데이트 시 자동으로 프리뷰 URL 생성
+- **환경변수**: Vercel 프로젝트 설정에 등록 (`.env.local`과 동일한 키)
+
+### 브랜치 보호 규칙
+
+- main 브랜치 직접 push 금지
+- PR 필수 + CI (`build` job) 통과 필수
+- GitHub repo Settings → Rules → Rulesets에서 관리
+
+### PR 템플릿
+
+- `.github/pull_request_template.md`
+- 섹션: 작업 목적, 변경 내용, 기술적 변경, 스크린샷, 체크리스트
+
+---
+
+*마지막 업데이트: 2026-03-22 (세션 #7 — CI/CD + 브랜치 워크플로우 구축)*
