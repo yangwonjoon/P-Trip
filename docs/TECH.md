@@ -116,7 +116,8 @@
 - `id`: UUID (auto-generated)
 - `images`, `tags`: PostgreSQL 배열 (`text[]`)
 - `rating`: `numeric(2,1)`, `weight`: `numeric(3,2)`
-- `category`, `city`, `source`: text + CHECK 제약조건 (enum 대신 — 마이그레이션 유연성)
+- `category`, `source`: text + CHECK 제약조건 (enum 대신 — 마이그레이션 유연성)
+- `city`: text (자유 텍스트 — 시 단위, CHECK 제약 제거됨. 세션 #8에서 고정 enum → 자유 텍스트 전환)
 - `created_at`, `updated_at`: 자동 타임스탬프 (updated_at은 트리거로 자동 갱신)
 
 ### RLS (Row Level Security)
@@ -144,11 +145,46 @@
 - 수동 큐레이션 데이터 (`source: 'MANUAL'`)
 - Supabase SQL Editor에서 마이그레이션 → 시드 순서로 실행
 
-### 데이터 관리 방식
+### 데이터 관리 방식 — 데이터 파이프라인
 
-- **MVP**: Supabase 대시보드 Table Editor로 직접 CRUD (소규모 데이터)
-- **확장 시**: 카카오 Local API → Google Places 영문 매칭 → Supabase INSERT 파이프라인 스크립트 (`3-5`)
-- **가중치 조정**: `weight` 컬럼으로 노출 빈도 조절 (기본 1.0, 대시보드에서 수동 변경)
+카카오 Local API 기반 반자동 데이터 파이프라인으로 장소 데이터를 관리한다.
+
+**3단계 데이터 흐름**:
+```
+[Stage 1: 후보 발굴]          [Stage 2: 대기 리스트]           [Stage 3: DB 저장]
+카카오 API → JSON 파일        DB 중복 제거된 신규 장소          Supabase places 테이블
+(이름, 좌표, place_id)        (kakao_place_id 기준 자동 스킵)   (오리지널 영문 콘텐츠)
+```
+
+**CLI 명령어**:
+| 명령어 | 설명 |
+|--------|------|
+| `npm run pipeline:status` | DB 현황 대시보드 (도시별/카테고리별 카운트, 부족 도시 추천) |
+| `npm run pipeline:discover -- --city=PAJU --category=FOOD` | 카카오 API 후보 수집 (인자 없으면 부족 도시 자동 선택) |
+| `npm run pipeline:pending -- --city=PAJU` | 콘텐츠 미작성 장소 목록 (후보 JSON vs DB 비교) |
+| `npm run pipeline:generate -- --count=5 --city=PAJU` | 대기 리스트에서 N개 선택, Claude Code 콘텐츠 작성용 정보 출력 |
+
+**핵심 모듈** (`scripts/lib/`):
+- `env.ts`: dotenv 공통 로더
+- `supabase-admin.ts`: service role key 클라이언트 (INSERT용)
+- `area-classifier.ts`: 주소 → city 코드 분류기 (전국 시/군 단위)
+- `kakao-collector.ts`: 카카오 API 수집 핵심 로직
+
+**주소 기반 도시 분류 규칙**:
+- 특별시/광역시 → 시 이름 (서울특별시 → `SEOUL`, 부산광역시 → `BUSAN`)
+- 도 하위 → 시/군 이름 (경기도 파주시 → `PAJU`, 강원도 강릉시 → `GANGNEUNG`)
+- 동명이군 구분: 고성군(강원) → `GOSEONG_GW`, 고성군(경남) → `GOSEONG_GN`
+
+**검색 영역 설정** (`scripts/config/areas.ts`):
+- 도시별 검색 중심 좌표 + 반경 정의
+- 등록된 도시: SEOUL, PAJU, GOYANG, BUSAN, JEJU, SEOGWIPO
+- 새 도시 추가: `CITY_AREAS`에 검색 영역 추가 + `src/shared/config/cities.ts`에 표시 정보 추가
+
+**약관 준수**:
+- 카카오 API는 후보 발굴(검색)용도로만 사용
+- DB 저장 콘텐츠(description, dokkaebi_tip, tags)는 반드시 오리지널
+- 카카오에서 가져와 DB 저장 가능: 장소 이름(고유명사), 좌표(지리적 사실), kakao_place_id
+- 가중치 조정: `weight` 컬럼으로 노출 빈도 조절 (기본 1.0, 대시보드에서 수동 변경)
 
 ### Supabase 클라이언트
 
@@ -160,11 +196,13 @@
 
 ## 외부 API 연동
 
-### 카카오 Local API — ⏸ 보류 (Phase 2)
+### 카카오 Local API — ✅ 활성 (데이터 파이프라인)
 
-- **상태**: 비즈앱 심사 필요 → MVP에서는 사용하지 않음
-- **Route Handler**: `src/app/api/kakao/search/route.ts` (구현 완료, 심사 후 활성화)
-- **Phase 2**: 심사 통과 후 대량 장소 자동 수집용으로 연동
+- **용도**: 장소 후보 발굴 (검색) — DB 저장 콘텐츠는 오리지널
+- **Route Handler**: `src/app/api/kakao/search/route.ts` (프론트엔드용)
+- **파이프라인 스크립트**: `scripts/lib/kakao-collector.ts` (CLI용 직접 호출)
+- **검색 전략**: FOOD → 카테고리 FD6, ATTRACTION → AT4+CT1, SHOPPING → 키워드 검색
+- **Rate limit**: 200ms 간격, 페이지당 15개 × 3페이지 = 최대 45개/지역
 
 ### Google Places API — ✅ 연동 완료
 
@@ -255,4 +293,4 @@
 
 ---
 
-*마지막 업데이트: 2026-03-22 (세션 #7 — CI/CD + 브랜치 워크플로우 구축)*
+*마지막 업데이트: 2026-03-22 (세션 #8 — 데이터 파이프라인 개선)*

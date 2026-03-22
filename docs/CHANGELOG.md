@@ -5,6 +5,44 @@
 
 ---
 
+## 2026-03-22 | 세션 #8 — 데이터 파이프라인 개선
+
+### 논의 배경
+- 데이터 수집/관리가 전부 수동이라 비효율적 (매번 직접 지정, 중복 체크 없음)
+- 파주에서 검색했는데 서울로 분류되는 등 지역 분류 부정확
+- 이미 DB에 있는 장소를 수동으로 걸러야 함
+- 진행 현황 파악이 어려움
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | city 필드 | 고정 enum(SEOUL/BUSAN/JEJU) → 시 단위 자유 텍스트 | DB CHECK 제약 제거 |
+| 2 | 도시 분류 | 카카오 API 주소에서 시/군 단위 자동 파싱 | 전국 시/군 매핑 테이블 |
+| 3 | 중복 체크 | kakao_place_id 기준 자동 스킵 | DB 조회 → 후보 필터링 |
+| 4 | 파이프라인 | 4개 CLI 명령어 (status/discover/pending/generate) | npm run pipeline:* |
+| 5 | 자동화 수준 | 반자동 (후보 수집은 자동, 콘텐츠 작성은 Claude Code 트리거) | 토큰 비용 관리 |
+
+### 완료 항목
+- `scripts/lib/` 공통 인프라 (env, supabase-admin, area-classifier, kakao-collector)
+- `pipeline:status` — DB 현황 대시보드 (도시별/카테고리별 카운트 + 부족 도시 추천)
+- `pipeline:pending` — 콘텐츠 미작성 장소 목록 (후보 JSON vs DB 중복 비교)
+- `pipeline:discover` — 카카오 API 후보 수집 (자동 우선순위 + 주소 기반 city 분류)
+- `pipeline:generate` — 대기 리스트에서 N개 선택, 콘텐츠 작성용 정보 출력
+- `collect-kakao.ts` 리팩토링 (핵심 로직을 lib/kakao-collector.ts로 추출)
+- DB 마이그레이션 SQL (`20260322_alter_city_to_text.sql`) — city CHECK 제거 + 데이터 백필
+- City 타입 string 전환 + cities.ts 확장 (PAJU, GOYANG, SEOGWIPO 추가)
+- areas.ts 재구성 (PAJU/GOYANG 독립 도시로 분리)
+- TECH.md에 데이터 파이프라인 아키텍처 문서화
+
+### 다음 단계 (세션 #9)
+- [ ] Supabase SQL Editor에서 마이그레이션 실행 (city CHECK 제거 + 백필)
+- [ ] pipeline:discover로 부산/제주 후보 수집
+- [ ] pipeline:generate로 콘텐츠 작성 시작
+- [ ] SEO 메타태그 설정
+
+---
+
 ## 2026-03-22 | 세션 #7 — CI/CD + 브랜치 워크플로우 구축
 
 ### 논의 배경
