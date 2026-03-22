@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { Header } from "@/widgets/header";
 import { DrawController } from "@/widgets/draw-controller";
 import type { Coordinates } from "@/shared/config";
+import type { DrawMode } from "@/features/draw-card";
 import { FALLBACK_COORDS } from "@/shared/config";
 
 function DrawContent() {
@@ -18,11 +19,14 @@ function DrawContent() {
   const coordinates: Coordinates =
     !isNaN(lat) && !isNaN(lng) ? { lat, lng } : FALLBACK_COORDS;
 
+  // 드로우 모드 (category | mix)
+  const mode = (searchParams.get("mode") as DrawMode) ?? "category";
+
   return (
     <>
       <Header showBack city={t("location.nearMe")} />
       <main className="flex-1 max-w-md mx-auto w-full">
-        <DrawController coordinates={coordinates} />
+        <DrawController coordinates={coordinates} mode={mode} />
       </main>
     </>
   );
