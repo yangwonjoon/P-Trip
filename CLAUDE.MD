@@ -21,10 +21,25 @@
 
 - PRD 내용이 변경되면: `docs/PRD.md` 업데이트 + `docs/CHANGELOG.md`에 변경 내역 추가를 **반드시 함께** 수행
 - CHANGELOG는 최신 항목이 맨 위에 오도록 역순으로 기록
-- CHANGELOG 작성 시 세션 번호를 이어서 매김 (현재 세션 #4까지 완료)
+- CHANGELOG 작성 시 세션 번호를 이어서 매김 (현재 세션 #7까지 완료)
 - 와이어프레임 변경 시 `docs/WIREFRAME.md`도 함께 업데이트
 
 ## 개발 플로우
+
+### 브랜치 & PR 워크플로우
+
+main 브랜치는 **프로덕션 배포 브랜치**. 직접 push 금지, 반드시 PR을 통해 머지한다.
+
+1. **브랜치 생성** — 작업 목적 단위로 브랜치 생성
+   - 네이밍: `feat/기능명`, `fix/버그명`, `refactor/대상`, `docs/문서명`, `chore/설정명`
+   - 예: `feat/seo-metadata`, `fix/shuffle-animation`, `chore/ci-setup`
+2. **작업 & 커밋** — 브랜치에서 작업, 기존 커밋 컨벤션대로 커밋
+3. **PR 생성** — `gh pr create`로 PR 생성 (PR 템플릿 자동 적용)
+4. **CI 통과** — GitHub Actions가 자동으로 lint + build 체크
+5. **머지** — CI 통과 후 squash merge (`gh pr merge --squash --delete-branch`)
+6. **자동 배포** — main 머지 시 Vercel이 자동으로 프로덕션 배포
+
+### 작업 완료 시 자동 수행 항목
 
 코드 작업 완료 후 아래 항목을 **자동으로 반드시** 수행 (매번 지시 없이도):
 
@@ -34,7 +49,7 @@
 4. **PRD 동기화** — 기술/데이터 결정이 확정되면 `docs/PRD.md`의 관련 섹션도 최신 상태로 반영
 5. **CHANGELOG** — `docs/CHANGELOG.md`에 이번 세션의 변경 내역 기록 (세션 번호 이어서)
 6. **빌드 확인** — `npm run build` 통과 확인
-7. **커밋** — 빌드 통과 후 Git 커밋 컨벤션에 맞게 커밋 (지시 없이도 자동으로)
+7. **커밋 & PR** — 빌드 통과 후 Git 커밋 컨벤션에 맞게 커밋, 브랜치에서 PR 생성
 
 ## 기술 스택
 
@@ -44,7 +59,8 @@
 - **장소 데이터**: 카카오 Local API + Google Places API
 - **지도 (MVP)**: Google Maps Embed API → 추후 JavaScript API 확장
 - **애니메이션**: Framer Motion (카드 셔플, 페이지 전환)
-- **배포**: Vercel
+- **배포**: Vercel (main 머지 시 자동 배포)
+- **CI**: GitHub Actions (PR 시 lint + build 체크)
 - **광고**: Google AdSense
 - **분석**: Google Analytics
 
@@ -249,9 +265,9 @@ docs: TODO.md 업데이트
 
 | 경로          | 설명                                               | 상태   |
 | ------------- | -------------------------------------------------- | ------ |
-| `/`           | 랜딩 — 도깨비 히어로 + 위치 설정 + 모드 선택       | 미개발 |
-| `/draw`       | 카드 드로우 — 3상태 전환 (카테고리→셔플→결과)      | 미개발 |
-| `/result/:id` | 결과 상세 — 확장 정보 + 도깨비 팁 + 지도 + AdSense | 미개발 |
+| `/`           | 랜딩 — 도깨비 히어로 + 위치 설정 + 모드 선택       | ✅ 완료 |
+| `/draw`       | 카드 드로우 — 3상태 전환 (카테고리→셔플→결과)      | ✅ 완료 |
+| `/result/:id` | 결과 상세 — 확장 정보 + 도깨비 팁 + 지도 + AdSense | ✅ 완료 |
 
 ## 핵심 데이터 모델 (요약)
 
@@ -296,10 +312,12 @@ interface Place {
 
 - [x] PRD 작성 & 미결 사항 확정 (세션 #1)
 - [x] 와이어프레임 / UI 설계 (세션 #2)
-- [x] Next.js 프로젝트 초기화 (세션 #3)
-- [x] FSD 아키텍처 & 커밋 컨벤션 정의 (세션 #3)
-- [ ] FSD 구조로 리팩토링
+- [x] Next.js 프로젝트 초기화 + FSD 아키텍처 (세션 #3)
+- [x] UI 개발 완료 + 다국어 지원 (세션 #4)
+- [x] DB 스키마 + Supabase 연동 + API 키 발급 (세션 #5)
+- [x] 좌표 기반 반경 검색 전환 (세션 #6)
+- [x] Vercel 배포 + CI/CD + 브랜치 워크플로우 (세션 #7)
+- [ ] SEO 메타태그 설정
+- [ ] Google Analytics 연동
+- [ ] Google AdSense 연동
 - [ ] 도깨비 마스코트 일러스트 제작
-- [ ] Supabase 스키마 생성
-- [ ] API 키 발급 (카카오, Google)
-- [ ] 카드 셔플 애니메이션 프로토타입

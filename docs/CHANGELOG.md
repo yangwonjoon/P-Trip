@@ -5,6 +5,39 @@
 
 ---
 
+## 2026-03-22 | 세션 #7 — CI/CD + 브랜치 워크플로우 구축
+
+### 논의 배경
+- Vercel 배포 완료 후, main에 직접 push하는 방식에서 PR 기반 워크플로우로 전환 필요
+- CI를 통한 코드 품질 자동 체크 필요
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 브랜치 전략 | feature branch → PR → squash merge → main | main 직접 push 금지 |
+| 2 | 브랜치 네이밍 | `feat/`, `fix/`, `refactor/`, `docs/`, `chore/` 접두사 | 작업 목적 단위 |
+| 3 | CI | GitHub Actions (lint + build) | PR 대상 main 시 자동 실행 |
+| 4 | CD | Vercel 자동 배포 | main 머지 시 프로덕션, PR 시 프리뷰 |
+| 5 | 브랜치 보호 | PR 필수 + CI 통과 필수 | GitHub Rulesets |
+| 6 | PR 템플릿 | 작업 목적 / 변경 내용 / 기술적 변경 / 스크린샷 / 체크리스트 | 기술적 + 비기술적 내용 모두 포함 |
+
+### 완료 항목
+- GitHub Actions CI 워크플로우 (`.github/workflows/ci.yml`)
+- PR 템플릿 (`.github/pull_request_template.md`)
+- main 브랜치 보호 규칙 설정 (GitHub Rulesets)
+- GitHub Secrets 환경변수 등록
+- gh CLI 설치 및 연동
+- `useLocation` lint 에러 수정 (useEffect 내 동기 setState 방지)
+- CLAUDE.md, TECH.md, TODO.md에 워크플로우 반영
+
+### 다음 단계 (세션 #8)
+- [ ] SEO 메타태그 설정
+- [ ] Google Analytics 연동
+- [ ] Google AdSense 연동
+
+---
+
 ## 2026-03-22 | 세션 #6 — 좌표 기반 반경 검색 전환
 
 ### 논의 배경
