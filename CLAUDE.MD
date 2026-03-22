@@ -26,6 +26,21 @@
 
 ## 개발 플로우
 
+### 브랜치 & PR 워크플로우
+
+main 브랜치는 **프로덕션 배포 브랜치**. 직접 push 금지, 반드시 PR을 통해 머지한다.
+
+1. **브랜치 생성** — 작업 목적 단위로 브랜치 생성
+   - 네이밍: `feat/기능명`, `fix/버그명`, `refactor/대상`, `docs/문서명`, `chore/설정명`
+   - 예: `feat/seo-metadata`, `fix/shuffle-animation`, `chore/ci-setup`
+2. **작업 & 커밋** — 브랜치에서 작업, 기존 커밋 컨벤션대로 커밋
+3. **PR 생성** — `gh pr create`로 PR 생성 (PR 템플릿 자동 적용)
+4. **CI 통과** — GitHub Actions가 자동으로 lint + build 체크
+5. **머지** — CI 통과 후 squash merge (`gh pr merge --squash --delete-branch`)
+6. **자동 배포** — main 머지 시 Vercel이 자동으로 프로덕션 배포
+
+### 작업 완료 시 자동 수행 항목
+
 코드 작업 완료 후 아래 항목을 **자동으로 반드시** 수행 (매번 지시 없이도):
 
 1. **기술 문서** — 새로운 기술 선택, 아키텍처 결정, DB 스키마, 외부 API 연동 등이 있었으면 `docs/TECH.md`에 반영
@@ -34,7 +49,7 @@
 4. **PRD 동기화** — 기술/데이터 결정이 확정되면 `docs/PRD.md`의 관련 섹션도 최신 상태로 반영
 5. **CHANGELOG** — `docs/CHANGELOG.md`에 이번 세션의 변경 내역 기록 (세션 번호 이어서)
 6. **빌드 확인** — `npm run build` 통과 확인
-7. **커밋** — 빌드 통과 후 Git 커밋 컨벤션에 맞게 커밋 (지시 없이도 자동으로)
+7. **커밋 & PR** — 빌드 통과 후 Git 커밋 컨벤션에 맞게 커밋, 브랜치에서 PR 생성
 
 ## 기술 스택
 
@@ -44,7 +59,8 @@
 - **장소 데이터**: 카카오 Local API + Google Places API
 - **지도 (MVP)**: Google Maps Embed API → 추후 JavaScript API 확장
 - **애니메이션**: Framer Motion (카드 셔플, 페이지 전환)
-- **배포**: Vercel
+- **배포**: Vercel (main 머지 시 자동 배포)
+- **CI**: GitHub Actions (PR 시 lint + build 체크)
 - **광고**: Google AdSense
 - **분석**: Google Analytics
 
