@@ -197,24 +197,32 @@
 | 필드 | 타입 | 설명 |
 |------|------|------|
 | id | uuid | 고유 식별자 (auto-generated) |
-| name_en | string | 장소 이름 (영어) |
-| name_ko | string | 장소 이름 (한국어) |
+| name_en | string | 장소 이름 (영어, 레거시 호환용) |
+| name_ko | string | 장소 이름 (한국어, 레거시 호환용) |
+| name_i18n | object | 다국어 이름 (`ko`, `en`, `ja`, `zh`) |
 | category | enum | FOOD / ATTRACTION / SHOPPING |
-| city | enum | SEOUL / BUSAN / JEJU |
-| description | string | 짧은 설명 (영어, 1~2문장) |
-| description_long | string? | 상세 설명 (영어, 2~3문장) — /result/:id 페이지용 |
+| city | string | 시 단위 자유 텍스트 (`SEOUL`, `PAJU`, `BUSAN`, `JEJU` 등) |
+| description | string | 짧은 설명 (레거시 호환용 기본 문자열) |
+| description_i18n | object | 짧은 설명 다국어 본문 (`ko`, `en`, `ja`, `zh`) |
+| description_long | string? | 상세 설명 (레거시 호환용 기본 문자열) |
+| description_long_i18n | object? | 상세 설명 다국어 본문 (`ko`, `en`, `ja`, `zh`) — /result/:id 페이지용 |
 | images | string[] | 사진 URL 목록 |
 | latitude | number | GPS 위도 |
 | longitude | number | GPS 경도 |
-| address_en | string | 주소 (영어) |
-| address_ko | string | 주소 (한국어) |
-| operating_hours | string | 영업시간 |
-| closed_days | string? | 휴무일 (예: "Sundays") |
-| nearest_station | string? | 가까운 역/정류장 이름 (영어) |
+| address_en | string | 주소 (영어, 레거시 호환용) |
+| address_ko | string | 주소 (한국어, 레거시 호환용) |
+| address_i18n | object | 주소 다국어 텍스트 (`ko`, `en`, `ja`, `zh`) |
+| operating_hours | string | 영업시간 (언어 중립 원본 또는 기본 문자열) |
+| operating_hours_i18n | object? | 영업시간 다국어 텍스트 (`ko`, `en`, `ja`, `zh`) |
+| closed_days | string? | 휴무일 (레거시 호환용 기본 문자열) |
+| closed_days_i18n | object? | 휴무일 다국어 텍스트 (`ko`, `en`, `ja`, `zh`) |
+| nearest_station | string? | 가까운 역/정류장 이름 (레거시 호환용 기본 문자열) |
+| nearest_station_i18n | object? | 가까운 역/정류장 이름 다국어 텍스트 (`ko`, `en`, `ja`, `zh`) |
 | walk_minutes | number? | 역에서 도보 소요시간 (분) |
 | budget_min | number? | 예산 범위 하한 (KRW) |
 | budget_max | number? | 예산 범위 상한 (KRW) |
-| dokkaebi_tip | string? | 도깨비 마스코트 코멘트 — 장소별 실용적 팁을 캐릭터 톤으로 작성 |
+| dokkaebi_tip | string? | 도깨비 마스코트 코멘트 (레거시 호환용 기본 문자열) |
+| dokkaebi_tip_i18n | object? | 도깨비 팁 다국어 본문 (`ko`, `en`, `ja`, `zh`) |
 | google_maps_url | string | 구글맵 직접 링크 |
 | tags | string[] | 예: ["korean-bbq", "budget", "instagram"] |
 | rating | number | 내부 평점 (1~5) |
@@ -224,6 +232,12 @@
 | google_place_id | string? | Google Places API 장소 ID (연동 시) |
 | created_at | datetime | 생성 시각 (auto) |
 | updated_at | datetime | 수정 시각 (auto, 트리거) |
+
+### 다국어 콘텐츠 운영 원칙
+- 장소 데이터는 UI와 동일하게 `ko`, `en`, `ja`, `zh` 4개 언어를 지원한다.
+- `*_i18n` 필드는 JSON 객체로 저장한다. 예: `{"ko":"...", "en":"...", "ja":"...", "zh":"..."}`
+- 기존 `name_en`, `name_ko`, `description`, `address_en`, `address_ko` 등은 레거시 호환 및 점진적 마이그레이션을 위한 필드로 유지한다.
+- 신규 데이터 파이프라인은 AI agent가 4개 언어 콘텐츠를 함께 생성한 뒤 `*_i18n` 중심으로 저장한다.
 
 ### DayCourse (하루 코스)
 | 필드 | 타입 | 설명 |
@@ -259,7 +273,7 @@
 
 ## 8. 데이터 소싱 전략
 
-### MVP: 시드 데이터 + Google Places API
+### MVP~운영 초기: 시드 데이터 + Google Places API + 다국어 AI 작성
 
 **시드 데이터 (핵심)**
 - 서울 장소 15개 수동 큐레이션 (FOOD 5, ATTRACTION 5, SHOPPING 5)
@@ -270,20 +284,27 @@
 - `editorial_summary`로 영문 설명 참고
 - Route Handler로 서버 사이드 호출 (API 키 보호)
 
+**AI agent 다국어 작성**
+- 후보 장소 조사 후 `ko/en/ja/zh` 4개 언어 콘텐츠를 생성
+- `description`, `description_long`, `dokkaebi_tip`, `address` 등 사용자 노출 텍스트를 다국어로 저장
+- 카카오/구글 원문을 그대로 복사하지 않고 오리지널 문장으로 작성
+
 **데이터 흐름 (MVP):**
 ```
-시드 데이터 (수동 큐레이션)
+시드 데이터 / 후보 데이터
        ↓
 Google Places API → 영문 데이터 보충 (주소, 사진, 영업시간)
        ↓
-Supabase DB → 통합 장소 데이터 저장
+AI agent → ko/en/ja/zh 오리지널 콘텐츠 작성
+       ↓
+Supabase DB → 다국어 장소 데이터 저장
        ↓
 P's Trip 카드 덱 → 사용자에게 결과 제공
 ```
 
-### Phase 2: 카카오 Local API + 대량 수집
+### Phase 2: 카카오 Local API + 대량 수집 + AI agent 파이프라인
 - 카카오 비즈앱 심사 통과 후 연동
-- 카테고리/키워드 기반 장소 자동 수집 → Google Places 영문 매칭 → Supabase 저장
+- 카테고리/키워드 기반 장소 자동 수집 → Google Places 보충 → AI agent 다국어 작성 → Supabase 저장
 - 부산, 제주 등 도시 확장 시 대량 데이터 수집용
 
 ### Phase 2~3: 커뮤니티 기능 추가
@@ -335,7 +356,7 @@ P's Trip 카드 덱 → 사용자에게 결과 제공
 - [ ] 사용자 계정 + 인증 도입
 - [ ] 커뮤니티 기능 (장소 제출, 리뷰, 추천)
 - [ ] 즐겨찾기 저장
-- [ ] 다국어 지원 (일본어, 중국어)
+- [ ] 장소 데이터 품질 고도화 (4개 언어 스타일 가이드, 용어 통일, QA)
 - [ ] 도시 추가 (경주, 속초 등)
 - [ ] PWA 지원
 - [ ] 제휴 연동

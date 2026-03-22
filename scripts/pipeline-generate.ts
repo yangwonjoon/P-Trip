@@ -7,8 +7,9 @@
  *   npm run pipeline:generate -- --count=3 --city=PAJU --category=FOOD
  *
  * pending 리스트에서 --count개를 선택하여 기본 정보를 출력한다.
- * Claude Code 세션에서 실행하면, 출력된 정보를 바탕으로
- * 웹 검색 → 오리지널 콘텐츠 작성 → Supabase INSERT를 수행할 수 있다.
+ * AI agent 세션에서 실행하면, 출력된 정보를 바탕으로
+ * 웹 조사 → 오리지널 영문 콘텐츠 작성 → Supabase INSERT까지 이어지는
+ * 작업 입력으로 사용할 수 있다.
  */
 import "./lib/env";
 import * as fs from "fs";
@@ -131,12 +132,12 @@ async function main() {
     console.log("");
   }
 
-  // 5. INSERT 템플릿 안내
+  // 5. 후속 작업 안내
   console.log("─".repeat(60));
-  console.log("\n📝 Claude Code에서 다음 작업을 수행하세요:");
-  console.log("   1. 각 장소를 웹 검색으로 조사");
+  console.log("\n📝 AI agent에서 다음 작업을 수행하세요:");
+  console.log("   1. 각 장소를 웹 조사");
   console.log("   2. 오리지널 영문 콘텐츠 작성 (description, dokkaebi_tip 등)");
-  console.log("   3. Supabase INSERT SQL 생성 및 실행");
+  console.log("   3. Supabase INSERT SQL 또는 INSERT 스크립트 생성 및 실행");
   console.log("\n   필수 필드: name_en, name_ko, category, city, description,");
   console.log("              latitude, longitude, address_en, address_ko,");
   console.log("              operating_hours, google_maps_url, source, kakao_place_id");

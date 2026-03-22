@@ -1,9 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { MapPin, RotateCcw } from "lucide-react";
 import type { Place } from "@/entities/place";
-import { getDirectionsUrl } from "@/entities/place";
+import { getDirectionsUrl, getPlaceName } from "@/entities/place";
 import { PlaceCard } from "@/entities/place/ui";
 import { Button, MapEmbed } from "@/shared/ui";
 import { Link } from "@/i18n/navigation";
@@ -15,6 +15,8 @@ interface DrawResultProps {
 
 export function DrawResult({ place, onDrawAgain }: DrawResultProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const placeName = getPlaceName(place, locale);
 
   return (
     <div className="px-6 py-8">
@@ -26,7 +28,7 @@ export function DrawResult({ place, onDrawAgain }: DrawResultProps) {
       <PlaceCard place={place} />
 
       <div className="mt-4">
-        <MapEmbed query={place.name_en} lat={place.latitude} lng={place.longitude} size="lg" />
+        <MapEmbed query={placeName} lat={place.latitude} lng={place.longitude} size="lg" />
       </div>
 
       <div className="mt-4 flex flex-col gap-3">

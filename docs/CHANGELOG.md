@@ -5,6 +5,88 @@
 
 ---
 
+## 2026-03-22 | 세션 #12 — 장소 데이터 i18n 렌더링 연결
+
+### 논의 배경
+- JSONB i18n 스키마 초안만으로는 실제 서비스 화면이 다국어 장소 데이터를 사용하지 못했음
+- 결과 카드와 상세 페이지가 여전히 `name_en`, `description`, `address_en` 같은 레거시 컬럼에 직접 의존하고 있었음
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 화면 조회 우선순위 | `*_i18n` 우선, 레거시 컬럼 폴백 | 점진 마이그레이션 |
+| 2 | 헬퍼 위치 | `entities/place/lib` | 이름/설명/주소/팁 공통 처리 |
+| 3 | 범위 | 결과 카드 + 상세 페이지 | draw/result 핵심 경로 우선 |
+
+### 완료 항목
+- `Place` 타입에 `*_i18n` 필드 추가
+- `getLocalizedPlaceText` 헬퍼 추가 (`name`, `description`, `address`, `hours`, `tip` 등)
+- `PlaceCard`, `PlaceInfo`, `PlaceDetails`, `DrawResult`, `ResultDetail`를 로케일 기반 렌더링으로 전환
+- 지도 iframe title/query도 로케일 기반 이름을 사용하도록 조정
+- `pipeline-insert-sql.ts` 추가로 AI agent 결과 JSON -> Supabase INSERT SQL 생성 경로 마련
+
+### 다음 단계 (세션 #13)
+- [ ] Node 20+ 환경에서 `npm run build` 기준으로 i18n 마이그레이션 안정성 확인
+- [ ] `Place` 조회 쿼리/seed/insert 흐름을 `*_i18n` 중심으로 정리
+- [ ] AI agent 결과 JSON 샘플 파일 작성 및 검수 루틴 정리
+- [ ] Supabase SQL Editor에서 i18n JSONB 마이그레이션 검토 및 실행
+
+## 2026-03-22 | 세션 #11 — 장소 데이터 4개 언어 스키마 설계
+
+### 논의 배경
+- UI는 이미 `ko/en/ja/zh`를 지원하지만 장소 데이터는 아직 단일 언어 중심 구조였음
+- `pipeline:generate` 이후 AI agent가 작성하는 콘텐츠도 4개 언어로 저장할 필요가 생김
+- 컬럼 폭증을 피하면서 확장 가능한 구조가 필요했음
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | 다국어 저장 방식 | `*_i18n jsonb` | `ko`, `en`, `ja`, `zh` 4키 |
+| 2 | 적용 대상 | name, description, description_long, address, operating_hours, closed_days, nearest_station, dokkaebi_tip | 사용자 노출 텍스트 중심 |
+| 3 | 레거시 컬럼 처리 | 당분간 병행 유지 | 프론트/쿼리 점진 마이그레이션 |
+| 4 | AI agent 출력 기준 | 4개 언어 동시 생성 | INSERT 단계에서 `*_i18n` 우선 저장 |
+
+### 완료 항목
+- `PRD.md` Place 모델을 4개 언어 JSONB 기준으로 갱신
+- `TECH.md`에 다국어 장소 데이터 저장 전략과 마이그레이션 초안 반영
+- `TODO.md`에 장소 데이터 i18n 스키마 설계 완료 및 후속 작업 추가
+- `supabase/migrations/20260322_add_place_i18n_jsonb.sql` 초안 추가
+
+### 다음 단계 (세션 #12)
+- [ ] Supabase SQL Editor에서 i18n JSONB 마이그레이션 검토 및 실행
+- [ ] `Place` 타입/쿼리/컴포넌트를 `*_i18n` 기반으로 전환
+- [ ] AI agent용 INSERT SQL/스크립트 포맷 설계
+- [ ] pipeline:discover로 부산/제주 후보 수집
+
+## 2026-03-22 | 세션 #10 — AI agent 데이터 수집 역할 명시
+
+### 논의 배경
+- `pipeline:generate` 이후 단계를 사람이 조사하는 흐름으로 오해할 여지가 있었음
+- 실제 운영 의도는 AI agent가 후보를 조사하고 오리지널 콘텐츠를 작성한 뒤 DB 적재까지 이어가는 방식
+- 다음 개선 대상으로 INSERT SQL/스크립트 자동화 필요성이 정리됨
+
+### 확정된 결정 사항
+
+| # | 항목 | 결정 | 비고 |
+|---|------|------|------|
+| 1 | `pipeline:generate` 역할 | AI agent 조사/작성 입력 큐 | 사람 수동 조사 단계로 보지 않음 |
+| 2 | 콘텐츠 작성 주체 | AI agent | 오리지널 영문 콘텐츠 작성 |
+| 3 | 후속 적재 방식 | INSERT SQL 또는 INSERT 스크립트 | service role 기반 |
+| 4 | 다음 개선 항목 | INSERT 자동화 정리 | generate 다음 단계 보강 |
+
+### 완료 항목
+- `pipeline:generate.ts` 주석과 CLI 안내 문구를 AI agent 기준으로 수정
+- `TECH.md`에 AI agent 조사/작성 단계와 INSERT 자동화 목표 반영
+- `TODO.md`에 AI agent 큐 운영 완료 및 INSERT 스크립트 태스크 추가
+
+### 다음 단계 (세션 #11)
+- [ ] Supabase SQL Editor에서 마이그레이션 실행 (city CHECK 제거 + 백필)
+- [ ] pipeline:discover로 부산/제주 후보 수집
+- [ ] AI agent용 INSERT SQL/스크립트 포맷 설계
+- [ ] SEO 메타태그 설정
+
 ## 2026-03-22 | 세션 #9 — 문서 source of truth 정리
 
 ### 논의 배경

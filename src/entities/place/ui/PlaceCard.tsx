@@ -1,8 +1,15 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Clock, MapPin } from "lucide-react";
 import type { Place } from "../model/types";
+import {
+  getPlaceAddress,
+  getPlaceDescription,
+  getPlaceName,
+  getPlaceOperatingHours,
+  getPlaceSecondaryName,
+} from "../lib/getLocalizedPlaceText";
 import { CATEGORY_MAP } from "@/shared/config";
 import { cn } from "@/shared/lib";
 
@@ -12,7 +19,13 @@ interface PlaceCardProps {
 
 export function PlaceCard({ place }: PlaceCardProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const category = CATEGORY_MAP[place.category];
+  const name = getPlaceName(place, locale);
+  const secondaryName = getPlaceSecondaryName(place, locale);
+  const description = getPlaceDescription(place, locale);
+  const operatingHours = getPlaceOperatingHours(place, locale);
+  const address = getPlaceAddress(place, locale);
 
   return (
     <div className="rounded-2xl border border-border overflow-hidden bg-card">
@@ -27,8 +40,10 @@ export function PlaceCard({ place }: PlaceCardProps) {
       </div>
 
       <div className="p-4">
-        <h3 className="text-base font-bold">{place.name_en}</h3>
-        <p className="text-sm text-muted-foreground">{place.name_ko}</p>
+        <h3 className="text-base font-bold">{name}</h3>
+        {secondaryName && (
+          <p className="text-sm text-muted-foreground">{secondaryName}</p>
+        )}
 
         <div className="flex flex-wrap gap-1.5 mt-2">
           {place.tags.slice(0, 4).map((tag) => (
@@ -45,17 +60,17 @@ export function PlaceCard({ place }: PlaceCardProps) {
         </div>
 
         <p className="text-sm text-foreground/80 mt-3 leading-relaxed">
-          {place.description}
+          {description}
         </p>
 
         <div className="flex flex-col gap-1.5 mt-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 shrink-0" />
-            <span>{place.operating_hours}</span>
+            <span>{operatingHours}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate">{place.address_en}</span>
+            <span className="truncate">{address}</span>
           </div>
         </div>
       </div>

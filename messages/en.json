@@ -64,7 +64,10 @@
   "cities": {
     "SEOUL": "Seoul",
     "BUSAN": "Busan",
-    "JEJU": "Jeju"
+    "JEJU": "Jeju",
+    "PAJU": "Paju",
+    "GOYANG": "Goyang",
+    "SEOGWIPO": "Seogwipo"
   },
   "placeDetails": {
     "hours": "Hours",

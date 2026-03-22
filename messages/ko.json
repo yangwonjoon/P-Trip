@@ -64,7 +64,10 @@
   "cities": {
     "SEOUL": "서울",
     "BUSAN": "부산",
-    "JEJU": "제주"
+    "JEJU": "제주",
+    "PAJU": "파주",
+    "GOYANG": "고양",
+    "SEOGWIPO": "서귀포"
   },
   "placeDetails": {
     "hours": "영업시간",

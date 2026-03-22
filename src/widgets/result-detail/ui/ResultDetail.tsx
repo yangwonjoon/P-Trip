@@ -1,9 +1,16 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { MapPin, Share2, RotateCcw } from "lucide-react";
 import type { Place } from "@/entities/place";
-import { PlaceHero, PlaceInfo, PlaceDetails, getDirectionsUrl } from "@/entities/place";
+import {
+  PlaceHero,
+  PlaceInfo,
+  PlaceDetails,
+  getDirectionsUrl,
+  getPlaceDokkaebiTip,
+  getPlaceName,
+} from "@/entities/place";
 import { Button, DokkaebiTip, MapEmbed } from "@/shared/ui";
 import { Link } from "@/i18n/navigation";
 
@@ -13,6 +20,9 @@ interface ResultDetailProps {
 
 export function ResultDetail({ place }: ResultDetailProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const placeName = getPlaceName(place, locale);
+  const dokkaebiTip = getPlaceDokkaebiTip(place, locale);
 
   return (
     <div className="pb-8">
@@ -24,7 +34,7 @@ export function ResultDetail({ place }: ResultDetailProps) {
         <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
           {t("placeDetails.location")}
         </p>
-        <MapEmbed query={place.name_en} lat={place.latitude} lng={place.longitude} size="lg" />
+        <MapEmbed query={placeName} lat={place.latitude} lng={place.longitude} size="lg" />
       </div>
 
       <div className="px-6 mt-6 flex flex-col gap-3">
@@ -49,9 +59,9 @@ export function ResultDetail({ place }: ResultDetailProps) {
         </div>
       </div>
 
-      {place.dokkaebi_tip && (
+      {dokkaebiTip && (
         <div className="mt-6">
-          <DokkaebiTip tip={place.dokkaebi_tip} />
+          <DokkaebiTip tip={dokkaebiTip} />
         </div>
       )}
 

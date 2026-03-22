@@ -103,7 +103,7 @@
   - `src/middleware.ts` — 로케일 감지 + 리다이렉트
 - **categories/cities**: label/description을 메시지 파일에서 관리, config에는 key/emoji/color만 유지
 - **기존 `copy.ts` 삭제**: 모든 텍스트가 `messages/*.json`으로 이관됨
-- **장소 데이터 다국어**: API 연결 후 별도 진행 (DB 스키마 확장 필요)
+- **장소 데이터 다국어**: `ko`, `en`, `ja`, `zh` 4개 언어 지원. `places` 테이블의 `*_i18n jsonb` 필드를 source of truth로 사용하고, 기존 단일 언어 컬럼은 점진적 마이그레이션 동안 유지
 
 ---
 
@@ -118,7 +118,9 @@
 - `rating`: `numeric(2,1)`, `weight`: `numeric(3,2)`
 - `category`, `source`: text + CHECK 제약조건 (enum 대신 — 마이그레이션 유연성)
 - `city`: text (자유 텍스트 — 시 단위, CHECK 제약 제거됨. 세션 #8에서 고정 enum → 자유 텍스트 전환)
+- 다국어 사용자 노출 텍스트는 `name_i18n`, `description_i18n`, `description_long_i18n`, `address_i18n`, `operating_hours_i18n`, `closed_days_i18n`, `nearest_station_i18n`, `dokkaebi_tip_i18n` JSONB 필드로 확장
 - `created_at`, `updated_at`: 자동 타임스탬프 (updated_at은 트리거로 자동 갱신)
+- 마이그레이션 초안: `supabase/migrations/20260322_add_place_i18n_jsonb.sql`
 
 ### RLS (Row Level Security)
 
@@ -148,12 +150,13 @@
 ### 데이터 관리 방식 — 데이터 파이프라인
 
 카카오 Local API 기반 반자동 데이터 파이프라인으로 장소 데이터를 관리한다.
+후보 수집은 스크립트가 담당하고, 콘텐츠 조사/작성은 AI agent가 수행한다.
 
-**3단계 데이터 흐름**:
+**4단계 데이터 흐름**:
 ```
-[Stage 1: 후보 발굴]          [Stage 2: 대기 리스트]           [Stage 3: DB 저장]
-카카오 API → JSON 파일        DB 중복 제거된 신규 장소          Supabase places 테이블
-(이름, 좌표, place_id)        (kakao_place_id 기준 자동 스킵)   (오리지널 영문 콘텐츠)
+[Stage 1: 후보 발굴]          [Stage 2: 대기 리스트]           [Stage 3: AI 조사/작성]               [Stage 4: DB 저장]
+카카오 API → JSON 파일        DB 중복 제거된 신규 장소          AI agent가 웹 조사 후                Supabase places 테이블
+(이름, 좌표, place_id)        (kakao_place_id 기준 자동 스킵)   ko/en/ja/zh 오리지널 콘텐츠 작성     INSERT SQL/스크립트로 적재
 ```
 
 **CLI 명령어**:
@@ -162,13 +165,20 @@
 | `npm run pipeline:status` | DB 현황 대시보드 (도시별/카테고리별 카운트, 부족 도시 추천) |
 | `npm run pipeline:discover -- --city=PAJU --category=FOOD` | 카카오 API 후보 수집 (인자 없으면 부족 도시 자동 선택) |
 | `npm run pipeline:pending -- --city=PAJU` | 콘텐츠 미작성 장소 목록 (후보 JSON vs DB 비교) |
-| `npm run pipeline:generate -- --count=5 --city=PAJU` | 대기 리스트에서 N개 선택, Claude Code 콘텐츠 작성용 정보 출력 |
+| `npm run pipeline:generate -- --count=5 --city=PAJU` | 대기 리스트에서 N개 선택, AI agent 조사/작성 입력용 정보 출력 |
+| `npm run pipeline:insert-sql -- --input=data/ai-ready/foo.json --output=supabase/generated/foo.sql` | AI agent 결과 JSON을 Supabase INSERT SQL로 변환 |
 
 **핵심 모듈** (`scripts/lib/`):
 - `env.ts`: dotenv 공통 로더
 - `supabase-admin.ts`: service role key 클라이언트 (INSERT용)
 - `area-classifier.ts`: 주소 → city 코드 분류기 (전국 시/군 단위)
 - `kakao-collector.ts`: 카카오 API 수집 핵심 로직
+
+**운영 원칙**:
+- `pipeline:generate`는 사람이 수동 조사하는 단계가 아니라 AI agent 작업 큐를 만드는 단계로 사용한다.
+- 후보 수집 결과만으로는 DB에 넣지 않고, AI agent가 작성한 4개 언어 오리지널 콘텐츠를 붙인 뒤 INSERT한다.
+- 신규 저장 기준은 `*_i18n jsonb` 필드이며, 기존 단일 문자열 필드는 프론트 마이그레이션이 끝날 때까지 병행 유지한다.
+- AI agent가 정리한 결과 JSON은 `pipeline:insert-sql`로 `INSERT ... WHERE NOT EXISTS` SQL로 변환한다.
 
 **주소 기반 도시 분류 규칙**:
 - 특별시/광역시 → 시 이름 (서울특별시 → `SEOUL`, 부산광역시 → `BUSAN`)
