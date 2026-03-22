@@ -1,6 +1,6 @@
 # TODO — P's Trip (P의 여행)
 
-> 마지막 업데이트: 2026-03-22 (세션 #7 — CI/CD + 브랜치 워크플로우 구축)
+> 마지막 업데이트: 2026-03-22 (세션 #12 — 장소 데이터 i18n 렌더링 연결)
 
 ---
 
@@ -56,10 +56,17 @@ SUPABASE_SERVICE_ROLE_KEY=
 |---|--------|-----------|------|
 | 3-1 | Supabase DB 스키마 생성 (places 테이블) | 2-5 완료 | ✅ |
 | 3-2 | 시드 데이터 준비 (서울 장소 15개) | 3-1 완료 | ✅ |
-| 3-3 | 카카오 Local API 연동 테스트 | 비즈앱 심사 필요 | ⏸ |
+| 3-3 | 카카오 Local API 연동 테스트 | 비즈앱 심사 필요 | ✅ |
 | 3-4 | Google Places API 영문 매칭 테스트 | 2-4 완료 | ✅ |
-| 3-5 | 데이터 파이프라인 스크립트 (카카오→영문변환→Supabase) | 3-3 보류로 후순위 | ⏸ |
+| 3-5 | 데이터 파이프라인 CLI (discover/pending/generate/status) | 세션 #8에서 구현 | ✅ |
 | 3-6 | 목데이터 → Supabase 실제 데이터 연결 | 3-1, 3-2 완료 | ✅ |
+| 3-7 | city 필드 시 단위 전환 (고정 enum → 자유 텍스트) | 세션 #8 | ✅ |
+| 3-8 | 주소 기반 도시 분류기 (전국 시/군 매핑) | 3-7 | ✅ |
+| 3-9 | `pipeline:generate`를 AI agent 조사/작성 큐로 운영 | 세션 #10 문서 반영 | ✅ |
+| 3-10 | 장소 데이터 4개 언어(JSONB i18n) 스키마 설계 | 세션 #11 | ✅ |
+| 3-11 | `Place` 타입/화면 렌더링을 `*_i18n` 기반으로 1차 연결 | 세션 #12 | ✅ |
+| 3-12 | AI agent 결과를 DB에 적재하는 INSERT SQL/스크립트 정리 | 세션 #12 1차 구현 | ✅ |
+| 3-13 | AI agent 출력 JSON 포맷 고정 및 실제 샘플 생성 | 3-12 이후 | ⬜ |
 
 ## Step 4 — UI 개발 (MVP 핵심, 목데이터로 진행)
 
@@ -145,11 +152,14 @@ SUPABASE_SERVICE_ROLE_KEY=
   - [x] next-intl 도입 + `[locale]` 라우팅
   - [x] UI 텍스트 번역 (COPY → messages/*.json)
   - [x] Header에 언어 선택 UI 추가
-  - [ ] 장소 데이터 다국어 (description, dokkaebi_tip 등) — API 연결 후 진행
+  - [🔄] 장소 데이터 다국어 (name/description/address/dokkaebi_tip 등) — JSONB i18n 스키마 기준으로 프론트/쿼리 마이그레이션
+  - [x] 주요 결과 UI에서 `*_i18n` 우선 렌더링
+  - [ ] Supabase 타입/쿼리/seed/insert 흐름까지 완전 전환
+  - [ ] AI agent 결과 JSON 샘플과 검수 체크리스트 추가
 - [ ] 믹스 드로우 모드
 - [ ] 하루 코스 생성기 (`/course`) + Google Maps JavaScript API
 - [ ] 소셜 공유 (OG 메타 + 공유 버튼)
-- [ ] 장소 데이터 확장 (부산, 제주)
+- [ ] 장소 데이터 확장 (pipeline:discover + pipeline:generate로 부산, 제주 등)
 - [x] 위치 기반 거리순 정렬 (좌표 기반 반경 검색으로 전환)
 - [ ] 관리자 가중치 설정
 - [ ] 사용자 계정 + 커뮤니티 (Phase 3)

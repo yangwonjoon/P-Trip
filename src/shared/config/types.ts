@@ -2,7 +2,7 @@
 
 export type Category = "FOOD" | "ATTRACTION" | "SHOPPING";
 
-export type City = "SEOUL" | "BUSAN" | "JEJU";
+export type City = string;
 
 export type DataSource = "KAKAO" | "GOOGLE" | "MANUAL" | "COMMUNITY";
 

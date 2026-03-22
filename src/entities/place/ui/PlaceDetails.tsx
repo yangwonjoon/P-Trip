@@ -1,6 +1,12 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Clock, MapPin, Train, Wallet } from "lucide-react";
 import type { Place } from "../model/types";
+import {
+  getPlaceAddress,
+  getPlaceClosedDays,
+  getPlaceNearestStation,
+  getPlaceOperatingHours,
+} from "../lib/getLocalizedPlaceText";
 
 interface PlaceDetailsProps {
   place: Place;
@@ -8,24 +14,29 @@ interface PlaceDetailsProps {
 
 export function PlaceDetails({ place }: PlaceDetailsProps) {
   const t = useTranslations("placeDetails");
+  const locale = useLocale();
+  const operatingHours = getPlaceOperatingHours(place, locale);
+  const closedDays = getPlaceClosedDays(place, locale);
+  const address = getPlaceAddress(place, locale);
+  const nearestStation = getPlaceNearestStation(place, locale);
 
   const items = [
     {
       icon: Clock,
       label: t("hours"),
-      value: place.operating_hours,
-      sub: place.closed_days ? t("closedDays", { days: place.closed_days }) : undefined,
+      value: operatingHours,
+      sub: closedDays ? t("closedDays", { days: closedDays }) : undefined,
     },
     {
       icon: MapPin,
       label: t("address"),
-      value: place.address_en,
+      value: address,
     },
-    place.nearest_station
+    nearestStation
       ? {
           icon: Train,
           label: t("nearestStation"),
-          value: place.nearest_station,
+          value: nearestStation,
           sub: place.walk_minutes
             ? t("walkMinutes", { minutes: place.walk_minutes })
             : undefined,

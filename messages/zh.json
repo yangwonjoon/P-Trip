@@ -64,7 +64,10 @@
   "cities": {
     "SEOUL": "首尔",
     "BUSAN": "釜山",
-    "JEJU": "济州"
+    "JEJU": "济州",
+    "PAJU": "坡州",
+    "GOYANG": "高阳",
+    "SEOGWIPO": "西归浦"
   },
   "placeDetails": {
     "hours": "营业时间",
