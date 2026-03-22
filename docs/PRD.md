@@ -273,39 +273,35 @@
 
 ## 8. 데이터 소싱 전략
 
-### MVP~운영 초기: 시드 데이터 + Google Places API + 다국어 AI 작성
+### 카카오 Local API + AI agent 파이프라인
 
-**시드 데이터 (핵심)**
-- 서울 장소 15개 수동 큐레이션 (FOOD 5, ATTRACTION 5, SHOPPING 5)
-- Supabase DB에 직접 저장, 대시보드로 관리
+**후보 수집 (카카오 Local API)**
+- 카테고리/키워드 기반 장소 자동 수집 (이름, 주소, 좌표, place_id)
+- 주소 기반 도시 자동 분류 (전국 시/군 단위)
+- 수집 결과는 JSON 파일로 로컬 저장 (`data/candidates/`)
 
-**Google Places API (데이터 보충)**
-- place_id, 영문 주소, 영업시간, 사진 URL 자동 보충
-- `editorial_summary`로 영문 설명 참고
-- Route Handler로 서버 사이드 호출 (API 키 보호)
-
-**AI agent 다국어 작성**
-- 후보 장소 조사 후 `ko/en/ja/zh` 4개 언어 콘텐츠를 생성
+**AI agent 콘텐츠 작성**
+- 후보 장소를 웹 조사 후 `ko/en/ja/zh` 4개 언어 오리지널 콘텐츠 작성
 - `description`, `description_long`, `dokkaebi_tip`, `address` 등 사용자 노출 텍스트를 다국어로 저장
 - 카카오/구글 원문을 그대로 복사하지 않고 오리지널 문장으로 작성
+- 결과 JSON → `pipeline:insert-sql`로 INSERT SQL 생성
 
-**데이터 흐름 (MVP):**
+**데이터 흐름:**
 ```
-시드 데이터 / 후보 데이터
+[1] 카카오 API 후보 수집 (pipeline:discover)
        ↓
-Google Places API → 영문 데이터 보충 (주소, 사진, 영업시간)
+[2] DB 중복 제거 + 대기 리스트 (pipeline:pending)
        ↓
-AI agent → ko/en/ja/zh 오리지널 콘텐츠 작성
+[3] AI agent 웹 조사 → ko/en/ja/zh 오리지널 콘텐츠 작성 (pipeline:generate)
        ↓
-Supabase DB → 다국어 장소 데이터 저장
+[4] INSERT SQL 생성 → Supabase DB 적재 (pipeline:insert-sql)
        ↓
 P's Trip 카드 덱 → 사용자에게 결과 제공
 ```
 
-### Phase 2: 카카오 Local API + 대량 수집 + AI agent 파이프라인
-- 카카오 비즈앱 심사 통과 후 연동
-- 카테고리/키워드 기반 장소 자동 수집 → Google Places 보충 → AI agent 다국어 작성 → Supabase 저장
-- 부산, 제주 등 도시 확장 시 대량 데이터 수집용
+### Phase 2~: 도시 확장 + 대량 수집
+- 파주, 고양 등 수도권 → 부산, 제주 등 전국으로 확장
+- 동일 파이프라인(discover → pending → generate → insert-sql)으로 운영
 
 ### Phase 2~3: 커뮤니티 기능 추가
 - 사용자가 장소를 직접 추천/제출

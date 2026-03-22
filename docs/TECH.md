@@ -141,12 +141,6 @@
 - `idx_places_category`: (category) — 카테고리 전체 조회
 - `idx_places_lat_lng`: (latitude, longitude) — 반경 검색 성능 향상
 
-### 시드 데이터
-
-- `supabase/seed.sql`: 서울 장소 15개 (FOOD 5, ATTRACTION 5, SHOPPING 5)
-- 수동 큐레이션 데이터 (`source: 'MANUAL'`)
-- Supabase SQL Editor에서 마이그레이션 → 시드 순서로 실행
-
 ### 데이터 관리 방식 — 데이터 파이프라인
 
 카카오 Local API 기반 반자동 데이터 파이프라인으로 장소 데이터를 관리한다.
