@@ -66,7 +66,7 @@ export async function getPlaceById(id: string): Promise<Place | null> {
 /** 가중치 기반 랜덤 장소 1개 뽑기 — 반경 내 장소에서 선택 (폴백 포함) */
 export async function drawNearbyRandomPlace(
   coords: Coordinates,
-  category: Category,
+  category?: Category,
   radiusKm: number = DEFAULT_RADIUS_KM
 ): Promise<Place | null> {
   const places = await getNearbyPlacesWithFallback(coords, category, radiusKm);
