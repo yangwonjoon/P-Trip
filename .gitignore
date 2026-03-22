@@ -34,6 +34,9 @@ yarn-error.log*
 # claude code
 .claude/settings.local.json
 
+# pipeline data (카카오 API 수집 후보 — 로컬 전용, 재생성 가능)
+/data/
+
 # vercel
 .vercel
 
